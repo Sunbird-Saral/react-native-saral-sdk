@@ -1,2 +1,2 @@
-# SaralAndroidSDK
-Saral Android SDK
+# SaralSDK
+Saral SDK
