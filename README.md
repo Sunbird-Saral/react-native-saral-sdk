@@ -95,6 +95,19 @@ Apart for this additional permission should be provided, use following to start 
     <uses-feature android:name="android.hardware.camera.front.autofocus" android:required="false"/>
 ```
 
+## Make module entry
+In `MainApplication.java` file present in `android/app/src/main/java/com/saraldemo/` folder add following lines in function `protected List<ReactPackage> getPackages()`
+```
+packages.add(new SaralSDKPackage());
+```
+to load the `SaralSDK`. Please include appropriate import to resolve any error.
+```
+import org.ekstep.saral.saralsdk.SaralSDKPackage;
+```
+
+## Add google-services.json
+Lastly, SaralSDK uses Firebase api to load the inferencing model as well has capability to download updated from Firebase console. Hence, a valid `google-services.json` should be added into your project. In this example, we have added a dummy file for demonstration purpose. You can copy this file at `android/app/` of your RN project.
+
 ## Changes in RN application
 Use following snippet in `App.js` and run appropriate command to get start your RN application.
 
