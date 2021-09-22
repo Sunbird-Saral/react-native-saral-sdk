@@ -63,6 +63,13 @@ public class HWClassifier {
     private HWClassifier() {
     }
 
+    public boolean isInitialized() {
+        if (mInterpreter != null) {
+            return true;
+        }
+        return false;
+    }
+
     public void HWClassifierCallback(PredictionListener listener) throws IOException {
         predictionListener  = listener;
     }
@@ -162,12 +169,12 @@ public class HWClassifier {
                         .addOnFailureListener(e -> {
                             e.printStackTrace();
                             Log.e(TAG, e.getMessage());
-                            predictionListener.OnPredictionFailed("PREDICTION FAILED");
+                            predictionListener.OnPredictionFailed("PREDICTION FAILED", id);
                         });
 
             } catch (FirebaseMLException e) {
                 e.printStackTrace();
-                predictionListener.OnPredictionFailed("INVALID INTERPRETER");
+                predictionListener.OnPredictionFailed("INVALID INTERPRETER", id);
             }
         }
     }

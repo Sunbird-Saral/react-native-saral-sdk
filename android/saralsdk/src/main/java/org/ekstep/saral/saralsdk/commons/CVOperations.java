@@ -73,7 +73,7 @@ public class CVOperations {
 
     public static String saveImage(Mat image, String name, int randomLength, boolean flip) {
         String random       = getAlphaNumericString(randomLength);
-        String filepath     = Environment.getExternalStorageDirectory().getPath() + "/" + name + "_" + random + ".jpg";
+        String filepath     = FileOps.getInstance().getBaseDirectoryPath() + "/" + name + "_" + random + ".jpg";
         byte[] byteArray    = null;
 
         Bitmap resultBitmap = Bitmap.createBitmap(image.cols(), image.rows(), Bitmap.Config.ARGB_8888);
@@ -106,7 +106,7 @@ public class CVOperations {
     }
 
     public static void deleteAllImages() {
-        File dir = Environment.getExternalStorageDirectory();
+        File dir = FileOps.getInstance().getBaseDirectory();
         if (dir.isDirectory()) {
             String[] children = dir.list();
             for (int i = 0; i < children.length; i++) {
@@ -115,11 +115,6 @@ public class CVOperations {
                     new File(dir, filename).delete();
             }
         }
-    }
-
-    public static String getImageFilePath(String filename) {
-        String filepath     = Environment.getExternalStorageDirectory().getPath() + "/" + filename;
-        return filepath;
     }
 
     public static List<Rect> sortRects(List<Rect> rects) {

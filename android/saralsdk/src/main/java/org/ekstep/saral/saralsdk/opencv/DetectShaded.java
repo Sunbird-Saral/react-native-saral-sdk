@@ -50,7 +50,15 @@ public class DetectShaded {
     public Mat getROIMat(Mat image, int top, int left, int bottom, int right) {
         Rect rect           = new Rect(left, top, right - left, bottom - top);
         Mat croppedImage    = new Mat(image.clone(), rect);
-        return resizeImage(croppedImage);
+        Mat resizedImage    = resizeImage(croppedImage);
+
+        if (DEBUG) {
+            Log.d(TAG, "input image width: " + resizedImage.width() + " height: " + resizedImage.height());
+            Log.d(TAG, "rows: " + resizedImage.rows() + " cols: " + resizedImage.cols());
+            CVOperations.saveImage(resizedImage, "rows-", 3, false);
+        }
+
+        return resizedImage;
     }
     /**
      * Resize the rect to 28x28 size.
