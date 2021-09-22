@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.MediaActionSound;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.SurfaceView;
@@ -44,7 +45,7 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
     private static long mIgnoreFrameCount               = 0;
     private static final int START_PROCESSING_COUNT     = 20;
 
-    private String mROIConfigs                          = null;
+    private String mlayoutConfigs                       = null;
     private boolean isHWClassiferAvailable              = true;
     private boolean isRelevantFrameAvailable            = false;
     private boolean mIsScanningComplete                 = false;
@@ -63,25 +64,6 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
     private HashMap<String, String> mPredictedOMRs      = new HashMap<>();
     private HashMap<String, String> mPredictedClass     = new HashMap<>();
 
-    private HWClassifier hwClassifier;
-
-//    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
-//        @Override
-//        public void onManagerConnected(int status) {
-//            switch (status) {
-//                case LoaderCallbackInterface.SUCCESS:
-//                {
-//                    Log.i(TAG, "OpenCV loaded successfully");
-//                    mOpenCvCameraView.enableView();
-//                } break;
-//                default:
-//                {
-//                    super.onManagerConnected(status);
-//                } break;
-//            }
-//        }
-//    };
-
     public SaralSDKOpenCVScannerActivity() {
         Log.i(TAG, "Instantiated new " + this.getClass());
     }
@@ -96,8 +78,8 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
         super.onCreate(savedInstanceState);
         Bundle b = getIntent().getExtras();
         if(b != null) {
-            mROIConfigs = b.getString("roiConfigs");
-            Log.d(TAG, "Scanner type: " + mROIConfigs);
+            mlayoutConfigs = b.getString("layoutConfigs");
+            Log.d(TAG, "Scanner type: " + mlayoutConfigs);
         }
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -135,7 +117,7 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
                     result.put("confidence", new Double(confidence));
                     mPredictedDigits.put(id, result.toString());
                 } catch (JSONException e) {
-                    Log.e(TAG, "unable to parse mROIConfigs object");
+                    Log.e(TAG, "unable to create prediction object");
                 }
 
                 if (mIsClassifierRequestSubmitted && mTotalClassifiedCount >= mPredictedDigits.size()) {
@@ -149,71 +131,29 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
             }
 
             @Override
-            public void OnPredictionFailed(String error) {
+            public void OnPredictionFailed(String error, String id) {
                 Log.e(TAG, "Model prediction failed");
+                mTotalClassifiedCount++;
+                try {
+                    JSONObject result = new JSONObject();
+                    result.put("prediction", new Integer(0));
+                    result.put("confidence", new Double(0.0));
+                    mPredictedDigits.put(id, result.toString());
+                } catch (JSONException e) {
+                    Log.e(TAG, "unable to create prediction object");
+                }
+
+                if (mIsClassifierRequestSubmitted && mTotalClassifiedCount >= mPredictedDigits.size()) {
+                    mIsScanningComplete     = true;
+                }
+
+                if (mIsScanningComplete) {
+                    Log.d(TAG, "Scaning completed, classification count " + mTotalClassifiedCount);
+                    processScanningCompleted();
+                }
             }
         });
-
-//        if (!OpenCVLoader.initDebug()) {
-//            Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-//            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION, this, mLoaderCallback);
-//        } else {
-//            Log.d(TAG, "OpenCV library found inside package. Using it!");
-//            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
-//
-//            /**
-//             * Now load the classifier
-//             */
-//            try {
-//                hwClassifier    = new HWClassifier(SaralSDKOpenCVScannerActivity.this, new PredictionListener() {
-//                    @Override
-//                    public void OnPredictionSuccess(int digit, float confidence, String id) {
-//                        Log.d(TAG, "predicted digit:" + digit + " unique id:" + id + " confidence:" + confidence);
-//                        mTotalClassifiedCount++;
-//                        try {
-//                            JSONObject result = new JSONObject();
-//                            result.put("prediction", new Integer(digit));
-//                            result.put("confidence", new Double(confidence));
-//                            mPredictedDigits.put(id, result.toString());
-//                        } catch (JSONException e) {
-//                            Log.e(TAG, "unable to parse mROIConfigs object");
-//                        }
-//
-//                        if (mIsClassifierRequestSubmitted && mTotalClassifiedCount >= mPredictedDigits.size()) {
-//                            mIsScanningComplete     = true;
-//                        }
-//
-//                        if (mIsScanningComplete) {
-//                            Log.d(TAG, "Scaning completed, classification count " + mTotalClassifiedCount);
-//                            processScanningCompleted();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void OnPredictionFailed(String error) {
-//                        Log.e(TAG, "Model prediction failed");
-//                        isHWClassiferAvailable  = false;
-//                    }
-//
-//                    @Override
-//                    public void OnModelLoadStatus(String message) {
-//                        Log.d(TAG, "Model load status: " + message);
-//                        isHWClassiferAvailable  = true;
-//                    }
-//                });
-//
-//                hwClassifier.initialize();
-//
-//            } catch (IOException e) {
-//                Log.e(TAG, "Failed to load HWClassifier", e);
-//            }
-//        }
     }
-
-//    @Override
-//    public List<? extends CameraBridgeViewBase> getCameraViewList() {
-//        return null;
-//    }
 
     public void onDestroy() {
         super.onDestroy();
@@ -259,69 +199,81 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
         double DARKNESS_THRESHOLD   = 80.0;
         Mat tableMat                = mTableCornerDetection.processMat(image);
         mStartTime                  = SystemClock.uptimeMillis();
-        return;
 
-//        if (tableMat != null && isHWClassiferAvailable) {
-//            if (mIgnoreFrameCount < START_PROCESSING_COUNT) {
-//                mIgnoreFrameCount ++;
-//                return;
-//            }
-//            isRelevantFrameAvailable        = true;
-//            mIsScanningComplete             = false;
-//            mIsClassifierRequestSubmitted   = false;
-//
-//            JSONArray rois              = getROIs();
-//            Log.d(TAG, "Received Table image, extracting: " + rois.length() + " ROIs:");
-//
-//            mStartPredictTime       = SystemClock.uptimeMillis();
-//            MediaActionSound sound  = new MediaActionSound();
-//            sound.play(MediaActionSound.FOCUS_COMPLETE);
-//
-//            try {
-//                for (int i = 0; i < rois.length(); i++) {
-//                    JSONObject roiConfig  = rois.getJSONObject(i);
-//
-//                    if (roiConfig.getString("extractionMethod").equals("CELL_OMR")) {
-//                        String roiId        = roiConfig.getString("roiId");
-//                        JSONObject roi      = roiConfig.getJSONObject("roi");
-//
-//                        double percent      = mDetectShaded.getShadedPercentage(tableMat, roi.getInt("top"), roi.getInt("left"), roi.getInt("bottom"), roi.getInt("right"));
-//                        Integer answer      = 0;
-//                        if (percent > DARKNESS_THRESHOLD) {
-//                            answer = 1;
-//                        }
-//                        mPredictedOMRs.put(roiId, answer.toString());
-//                        Log.d(TAG, "key: " + roiId + " answer: " + answer.toString());
-//                    }
-//
-//                    if (roiConfig.getString("extractionMethod").equals("NUMERIC_CLASSIFICATION")) {
-//                        String roiId        = roiConfig.getString("roiId");
-//                        JSONObject roi      = roiConfig.getJSONObject("roi");
-//
-//                        mPredictedDigits.put(roiId, "0");
-//
-//                        Mat digitROI        = mDetectShaded.getROIMat(tableMat, roi.getInt("top"), roi.getInt("left"), roi.getInt("bottom"), roi.getInt("right"));
-//                        if(hwClassifier != null) {
-//                            Log.d(TAG, "Requesting prediction for: " + roiId);
-//                            hwClassifier.classifyMat(digitROI, roiId);
-//                        }
-//                    }
-//                }
-//                mIsClassifierRequestSubmitted = true;
-//                Log.d(TAG, "Detected OMR count: " + mPredictedOMRs.size() + " classifier count: " + mPredictedDigits.size());
-//
-//            } catch (JSONException e) {
-//                Log.e(TAG, "got JSON exception");
-//            }
-//        }
+        if (tableMat != null && isHWClassiferAvailable) {
+            if (mIgnoreFrameCount < START_PROCESSING_COUNT) {
+                mIgnoreFrameCount ++;
+                return;
+            }
+            isRelevantFrameAvailable        = true;
+            mIsScanningComplete             = false;
+            mIsClassifierRequestSubmitted   = false;
+
+            JSONArray rois              = getROIs();
+            Log.d(TAG, "Received Table image, extracting: " + rois.length() + " ROIs:");
+
+            mStartPredictTime       = SystemClock.uptimeMillis();
+            MediaActionSound sound  = new MediaActionSound();
+            sound.play(MediaActionSound.FOCUS_COMPLETE);
+
+            try {
+                for (int i = 0; i < rois.length(); i++) {
+                    JSONObject roiConfig  = rois.getJSONObject(i);
+
+                    if (roiConfig.getString("extractionMethod").equals("CELL_OMR")) {
+                        String roiId        = roiConfig.getString("roiId");
+                        JSONObject rect      = roiConfig.getJSONObject("rect");
+
+                        double percent      = mDetectShaded.getShadedPercentage(tableMat, rect.getInt("top"), rect.getInt("left"), rect.getInt("bottom"), rect.getInt("right"));
+                        Integer answer      = 0;
+                        if (percent > DARKNESS_THRESHOLD) {
+                            answer = 1;
+                        }
+                        mPredictedOMRs.put(roiId, answer.toString());
+                        Log.d(TAG, "key: " + roiId + " answer: " + answer.toString());
+                    }
+
+                    if (roiConfig.getString("extractionMethod").equals("NUMERIC_CLASSIFICATION")) {
+                        String roiId        = roiConfig.getString("roiId");
+                        JSONObject rect      = roiConfig.getJSONObject("rect");
+
+                        mPredictedDigits.put(roiId, "0");
+
+                        Mat digitROI        = mDetectShaded.getROIMat(tableMat, rect.getInt("top"), rect.getInt("left"), rect.getInt("bottom"), rect.getInt("right"));
+                        if(HWClassifier.getInstance().isInitialized() == true) {
+                            Log.d(TAG, "Requesting prediction for: " + roiId);
+                            HWClassifier.getInstance().classifyMat(digitROI, roiId);
+                        }
+                    }
+                }
+                mIsClassifierRequestSubmitted = true;
+                Log.d(TAG, "Detected OMR count: " + mPredictedOMRs.size() + " classifier count: " + mPredictedDigits.size());
+
+            } catch (JSONException e) {
+                Log.e(TAG, "got JSON exception");
+            }
+        }
     }
 
     private JSONArray getROIs() {
         try {
-            JSONArray array = new JSONArray(mROIConfigs);
-            return array;
+            JSONArray rois              = new JSONArray();
+            JSONObject layoutConfigs    = new JSONObject(mlayoutConfigs);
+
+            JSONObject layoutObject     = layoutConfigs.getJSONObject("layout");
+            JSONArray  cells            = layoutObject.getJSONArray("cells");
+
+            for (int i = 0; i < cells.length(); i++) {
+                JSONArray cellROIs      = cells.getJSONObject(i).getJSONArray("rois");
+                for (int j = 0; j < cellROIs.length(); j++) {
+                    JSONObject roi      = cellROIs.getJSONObject(j);
+                    rois.put(roi);
+                }
+            }
+            return rois;
+
         } catch (JSONException e) {
-            Log.e(TAG, "unable to parse mROIConfigs object");
+            Log.e(TAG, "unable to parse LayoutConfigs object");
             return null;
         }
     }
@@ -335,8 +287,8 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
         MediaActionSound sound  = new MediaActionSound();
         sound.play(MediaActionSound.SHUTTER_CLICK);
 
-        JSONArray  response = getScanResult();
-        Log.d(TAG, "Scanning completed OMR count: " + mPredictedOMRs.size() + " classifier count: " + mPredictedDigits.size());
+        JSONObject  response = getScanResult();
+        Log.d(TAG, "Scanning completed !!, OMR count: " + mPredictedOMRs.size() + " classifier count: " + mPredictedDigits.size());
 
         /**
          * return result to react-native
@@ -344,37 +296,42 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
         ReactInstanceManager mReactInstanceManager  = getReactNativeHost().getReactInstanceManager();
         ReactContext reactContext                   = mReactInstanceManager.getCurrentReactContext();
         Intent intent                               = new Intent(reactContext, SaralSDKOpenCVScannerActivity.class);
-        intent.putExtra("roiConfigsResult", response.toString());
-        mReactInstanceManager.onActivityResult(null, 1, 2, intent);
+        intent.putExtra("layoutConfigsResult", response.toString());
+        mReactInstanceManager.onActivityResult(this, 1, 2, intent);
         finish();
     }
 
-    private JSONArray getScanResult() {
-        JSONArray inputROIs     = getROIs();
-        JSONArray ouputROIs     = new JSONArray();
+    private JSONObject getScanResult() {
 
         try {
-            for (int i = 0; i < inputROIs.length(); i++) {
-                JSONObject roiConfig    = inputROIs.getJSONObject(i);
+            JSONObject layoutConfigs    = new JSONObject(mlayoutConfigs);
+            JSONObject layoutObject     = layoutConfigs.getJSONObject("layout");
+            JSONArray  cells            = layoutObject.getJSONArray("cells");
 
-                if (roiConfig.getString("extractionMethod").equals("NUMERIC_CLASSIFICATION")) {
-                    JSONObject out  = new JSONObject(mPredictedDigits.get(roiConfig.get("roiId")));
-                    roiConfig.put("result", out);
-                    ouputROIs.put(roiConfig);
-                }
+            for (int i = 0; i < cells.length(); i++) {
+                JSONArray cellROIs      = cells.getJSONObject(i).getJSONArray("rois");
+                for (int j = 0; j < cellROIs.length(); j++) {
+                    JSONObject roi      = cellROIs.getJSONObject(j);
 
-                if (roiConfig.getString("extractionMethod").equals("CELL_OMR")) {
-                    JSONObject out  = new JSONObject();
-                    out.put("prediction", mPredictedOMRs.get(roiConfig.get("roiId")));
-                    out.put("confidence", new Double(1.00));
-                    roiConfig.put("result", out);
-                    ouputROIs.put(roiConfig);
+                    if (roi.getString("extractionMethod").equals("NUMERIC_CLASSIFICATION")) {
+                        JSONObject result  = new JSONObject(mPredictedDigits.get(roi.get("roiId")));
+                        roi.put("result", result);
+                    }
+
+                    if (roi.getString("extractionMethod").equals("CELL_OMR")) {
+                        JSONObject result  = new JSONObject();
+                        result.put("prediction", mPredictedOMRs.get(roi.get("roiId")));
+                        result.put("confidence", new Double(1.00));
+                        roi.put("result", result);
+                    }
                 }
             }
+            return layoutConfigs;
+
         } catch (JSONException e) {
-            return ouputROIs;
+            Log.e(TAG, "unable to create response LayoutConfigs object");
+            return null;
         }
-        return ouputROIs;
     }
 
     private void showProcessingInformation(Mat image) {

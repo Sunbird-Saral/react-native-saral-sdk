@@ -12,6 +12,7 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 
+import org.ekstep.saral.saralsdk.commons.FileOps;
 import org.ekstep.saral.saralsdk.hwmodel.HWClassifier;
 import org.ekstep.saral.saralsdk.hwmodel.HWClassifierStatusListener;
 import org.json.JSONArray;
@@ -22,6 +23,7 @@ import org.opencv.android.OpenCVLoader;
 
 public class SaralSDKModule extends ReactContextBaseJavaModule implements ActivityEventListener {
     private static final String TAG             = "SrlSDK::Module";
+    Promise mPromise                            = null;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(getReactApplicationContext()) {
         @Override
@@ -41,6 +43,10 @@ public class SaralSDKModule extends ReactContextBaseJavaModule implements Activi
 
     SaralSDKModule(ReactApplicationContext context) {
         super(context);
+
+        context.addActivityEventListener(this);
+        FileOps.getInstance().initialize(context);
+
         Log.d(TAG, "SaralSDKModule loaded, trying to load OpenCV libs & Models");
         if (!OpenCVLoader.initDebug()) {
             Log.d(TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
@@ -50,7 +56,7 @@ public class SaralSDKModule extends ReactContextBaseJavaModule implements Activi
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
         HWClassifier.getInstance();
-        Log.d(TAG, "Loading HWCloassifer models");
+        Log.d(TAG, "Loading HWClassifer models");
         HWClassifier.getInstance().initialize(new HWClassifierStatusListener() {
             @Override
             public void OnModelLoadSuccess(String message) {
@@ -73,11 +79,13 @@ public class SaralSDKModule extends ReactContextBaseJavaModule implements Activi
     void startCamera(String layoutSchema, Promise promise) {
         Log.d(TAG, "startCamera called with: " + layoutSchema);
 
+        mPromise                        = promise;
+
         ReactApplicationContext context = getReactApplicationContext();
         Activity currentActivity        = getCurrentActivity();
 
         Intent intent                   = new Intent(currentActivity, SaralSDKOpenCVScannerActivity.class);
-        intent.putExtra("roiConfigs", layoutSchema);
+        intent.putExtra("layoutConfigs", layoutSchema);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         currentActivity.startActivity(intent);
     }
@@ -92,7 +100,10 @@ public class SaralSDKModule extends ReactContextBaseJavaModule implements Activi
 
     @Override
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
-
+        if (requestCode == 1) {
+            Log.d(TAG, "Response: " + data.getStringExtra("layoutConfigsResult"));
+            this.mPromise.resolve(data.getStringExtra("layoutConfigsResult"));
+        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, PermissionsAndroid } from 'react-native';
 import SaralSDK from './SaralSDK'
+import SaralSpecData from './data/format1.json'
 
 export default function App() {
 
@@ -19,7 +20,11 @@ export default function App() {
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         console.log("Camera permission granted, launching now ..");
-        SaralSDK.startCamera("{}")
+        SaralSDK.startCamera(JSON.stringify(SaralSpecData)).then(res => {
+          console.log(res);
+        }).catch((code, message) => {
+          console.log(message)
+        })
       } else {
         console.log("Camera permission denied");
       }
