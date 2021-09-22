@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, PermissionsAndroid } from 'react-native';
 import SaralSDK from './SaralSDK'
-import SaralSpecData from './data/format1.json'
+import SaralSpecData from './data/saral-physical-layout-representation-specs-example1.json'
 
 export default function App() {
 
