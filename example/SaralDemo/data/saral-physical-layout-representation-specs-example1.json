@@ -225,6 +225,47 @@
                 "validate": {
                     "regExp": null
                 }
+            },
+            {
+                "cellId": "a2c49a05-ec4f-4e48-8f06-2d0fdff90d4a",
+                "rois": [
+                    {
+                        "annotationId": "7XX7qrNvI",
+                        "annotationTags": "QUESTION_3_1",
+                        "extractionMethod": "NUMERIC_CLASSIFICATION",
+                        "roiId": "61214a9a-61bb-41fa-916f-e29efd505b78",
+                        "index": 0,
+                        "rect": {
+                            "top": 160,
+                            "left": 218,
+                            "bottom": 178,
+                            "right": 239
+                        }
+                    },
+                    {
+                        "annotationId": "NvfL8w1HQ",
+                        "annotationTags": "QUESTION_3_2",
+                        "extractionMethod": "NUMERIC_CLASSIFICATION",
+                        "roiId": "0f204ce8-2a6b-46cb-be5d-0f1a157d78f1",
+                        "index": 1,
+                        "rect": {
+                            "top": 160,
+                            "left": 256,
+                            "bottom": 178,
+                            "right": 276
+                        }
+                    }
+                ],
+                "render": {
+                    "index": 2
+                },
+                "format": {
+                    "name": "Question 1",
+                    "value": "question1"
+                },
+                "validate": {
+                    "regExp": null
+                }
             }
         ]
     }
