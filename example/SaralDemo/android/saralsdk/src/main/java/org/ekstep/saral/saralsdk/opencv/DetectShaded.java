@@ -47,11 +47,42 @@ public class DetectShaded {
         {
             pixel      = total / croppedImage.width()*croppedImage.height();
         }   
+        if (DEBUG) {
             Log.d(TAG, "input image width: " + image.width() + " height: " + image.height()+" pixel "+pixel);
             Log.d(TAG, "rows: " + croppedImage.rows() + " cols: " + croppedImage.cols());
-//            CVOperations.saveImage(croppedImage, "rows-", 3, false);
-
+            CVOperations.saveImage(croppedImage, "rows-", 3, false);
+        }
         return pixel;
+    }
+
+    public boolean isOMRFilled(Mat imageMat, int top, int left, int bottom, int right)
+    {
+        boolean isOMRFilled = false;
+        byte _BLACK_PIXEL_THRESHOLD = 100;
+        byte _OMR_FILLED_THRESHOULD = 100;
+        Mat gray                            = new Mat();
+        Imgproc.cvtColor(imageMat, gray, Imgproc.COLOR_BGR2GRAY);
+
+        int width = gray.width();
+        int height = gray.height();
+        int num_pixels = (int) gray.total();
+        int darkPixelCount =0;
+        double [] pixel = new double[3];
+        
+        for (int row = 0; row < height; row++) {
+            for (int column = 0; column < width; column++) {
+                pixel = gray.get(row,column);
+                if(pixel[0]<=_BLACK_PIXEL_THRESHOLD)
+                {
+                    darkPixelCount++;
+                }
+            }
+        }
+        if (DEBUG) {
+            Log.d(TAG, "OMR Dark Pixels Count:: "+darkPixelCount+" num_pixels:: "+num_pixels);
+        }
+        isOMRFilled = darkPixelCount >= _OMR_FILLED_THRESHOULD;
+        return isOMRFilled;
     }
 
     public Mat getROIMat(Mat image, int top, int left, int bottom, int right) {
@@ -67,6 +98,8 @@ public class DetectShaded {
 
         return resizedImage;
     }
+
+
     /**
      * Resize the rect to 28x28 size.
      */
