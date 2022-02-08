@@ -85,6 +85,7 @@ export default function App() {
 
 
     }
+    console.log("roisData",roisData);
   }
 
   const roiDataList = ["Guj_1s_5Q", "Guj_1s_12Q", "Guj_1s_34Q", "Odisha_1s_20Q", "Up_4s_20q_omr", "Up_3s_30q_omr", "Up_multisubject_1s_10q", "Up_hindi_8s_13q_omr", "Up_20s_midday_meal"]
