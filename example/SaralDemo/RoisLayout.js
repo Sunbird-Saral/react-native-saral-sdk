@@ -10468,7 +10468,8 @@ export const up_hindi_8s_13q_omr = {
         "name": "HINDI8S13QOMR Exam Sheet Form",
         "threshold": {
             "minWidth" : 500,
-            "minHeight": 200
+            "minHeight": 200,
+            "detectionRadius": 12
         },            
         "cells": [
             {
