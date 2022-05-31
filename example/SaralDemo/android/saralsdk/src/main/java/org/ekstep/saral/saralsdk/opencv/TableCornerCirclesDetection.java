@@ -48,7 +48,7 @@ public class TableCornerCirclesDetection {
         DEBUG = debug;
     }
 
-    public Mat processMat(Mat image,int minWidth,int minHeight) {
+    public Mat processMat(Mat image,int minWidth,int minHeight,int detectionRadius) {
 
         Mat gray        = new Mat();
         Imgproc.cvtColor(image, gray, Imgproc.COLOR_BGR2GRAY);
@@ -59,14 +59,20 @@ public class TableCornerCirclesDetection {
         /**
          * Draw the detected circles.
          */
-        if (DEBUG)
+        if (DEBUG) {
             drawDetectedCircles(image, circles);
-
+        }
+        
         if (circles.cols() > 0) {
             Point topLeft, topRight;
             Point bottomLeft, bottomRight;
 
             List<Point> points = CVOperations.getCirclesPoint(circles);
+            if(detectionRadius > 0 && !hasLayoutDetectionCircles(image, circles,detectionRadius))
+            {
+                showFocusAlert(image);
+                return null;
+            }
             if (points.size() == 4) {
                 CVOperations.sortPointListFromLeft(points);
                 List<Point> leftPoints = new ArrayList<Point>();
@@ -86,6 +92,7 @@ public class TableCornerCirclesDetection {
                 bottomLeft  = leftPoints.get(1);
                 bottomRight = rightPoints.get(1);
 
+                // distance 
                 mROI        = (bottomRight.x - topLeft.x) * (bottomLeft.y - topRight.y);
                 int minY        = Math.min((int)topLeft.y, (int)topRight.y);
                 int maxY        = Math.max((int)bottomLeft.y, (int)bottomRight.y);
@@ -96,12 +103,13 @@ public class TableCornerCirclesDetection {
                 int maxWidth    = maxX-minX;
 
                 Rect rectCrop = new Rect((int)((int)topLeft.x+(int)bottomLeft.x)/2, (int)topLeft.y-5, maxWidth, maxHeight+10);
-                Log.d(TAG, "TableCornerCirclesDetection::processMat() Rect Width " + rectCrop.width+" Rect Height "+rectCrop.height);	
-                if(minWidth > 0 && minHeight > 0 && (rectCrop.width < minWidth || rectCrop.height < minHeight))	
-                {	
-                    showProcessingInformation(image);	
-                    return null;	
+                Log.d(TAG, "TableCornerCirclesDetection::processMat() Rect Width " + rectCrop.width+" Rect Height "+rectCrop.height);
+                if(minWidth > 0 && minHeight > 0 && (rectCrop.width < minWidth || rectCrop.height < minHeight))
+                {
+                    showFocusAlert(image);
+                    return null;
                 }
+
                 if (0 <= rectCrop.x
                         && 0 <= rectCrop.width
                         && rectCrop.x + rectCrop.width <= image.cols()
@@ -122,9 +130,43 @@ public class TableCornerCirclesDetection {
                         CVOperations.saveImage(croppedMat, "table", 3, false);
                     return croppedMat;
                 }
+            }else{
+                showFocusAlert(image);
+                return null;
             }
         }
         return null;
+    }
+
+    private void showFocusAlert(Mat image) {
+        String text     = ">>>>>> Please focus the camera by moving up or down <<<<< ";
+        Point position  = new Point(image.width()/6, image.height() / 2);
+        Scalar color    = new Scalar(255, 0, 0);
+        int font        = org.opencv.core.Core.FONT_HERSHEY_SIMPLEX;
+        int scale       = 1;
+        int thickness   = 2;
+        Imgproc.putText(image, text, position, font, scale, color, thickness);
+    }
+
+    
+    private final boolean hasLayoutDetectionCircles(Mat src, Mat circles,int detectionRadius) {
+        boolean isValid= true;
+        if (circles.cols() > 0) {
+            for (int x = 0; x < circles.cols(); x++) {
+                double[] c = circles.get(0, x);
+                Point center = new Point(Math.round(c[0]), Math.round(c[1]));
+                // circle outline
+                int radius = (int) Math.round(c[2]);
+                if(radius < detectionRadius){ // Detection circle radius is 19
+                    isValid= false;
+                    break;
+                }
+                if (DEBUG) {
+                    Imgproc.circle(src, center, radius, new Scalar(255, 0, 255), 3, 8, 0);
+                }
+            }
+        }
+        return isValid;
     }
 
     private final Mat cropROI(Mat image, Point topLeft, Point topRight, Point bottomLeft, Point bottomRight) {

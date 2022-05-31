@@ -72,6 +72,7 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
     private boolean isMultiChoiceOMRLayout = false;
     private int layoutMinWidth = 0;	
     private int layoutMinHeight = 0;
+    private int detectionRadius = 0;
     public SaralSDKOpenCVScannerActivity() {
         Log.i(TAG, "Instantiated new " + this.getClass());
     }
@@ -216,8 +217,8 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
     private void processCameraFrame(Mat image, long frameCount) {
         double DARKNESS_THRESHOLD   = 80.0;
         mStartTime                  = SystemClock.uptimeMillis();
-        loadLayoutConfiguration();	
-        Mat tableMat                = mTableCornerDetection.processMat(image,layoutMinWidth,layoutMinHeight);
+        loadLayoutConfiguration(); 
+        Mat tableMat                = mTableCornerDetection.processMat(image,layoutMinWidth,layoutMinHeight,detectionRadius);
         Log.d(TAG,"isMultiChoiceOMRLayout " + isMultiChoiceOMRLayout );
         if(isMultiChoiceOMRLayout)
         {
@@ -242,25 +243,28 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
             try {
                 for (int i = 0; i < rois.length(); i++) {
                     JSONObject roiConfig  = rois.getJSONObject(i);
-                    Boolean b = roiConfig.getString("extractionMethod").equals("CELL_OMR");
-                    Log.d(TAG, "bbbbbbb " + b);
                     if (roiConfig.getString("extractionMethod").equals("CELL_OMR")) {
                         String roiId        = roiConfig.getString("roiId");
                         JSONObject rect      = roiConfig.getJSONObject("rect");
 
-                        double percent      = mDetectShaded.getShadedPercentage(tableMat, rect.getInt("top"), rect.getInt("left"), rect.getInt("bottom"), rect.getInt("right"),isMultiChoiceOMRLayout);
+                        // double percent      = mDetectShaded.getShadedPercentage(tableMat, rect.getInt("top"), rect.getInt("left"), rect.getInt("bottom"), rect.getInt("right"),isMultiChoiceOMRLayout);
                         Mat omrROI        = mDetectShaded.getROIMat(tableMat, rect.getInt("top"), rect.getInt("left"), rect.getInt("bottom"), rect.getInt("right"));                   
                         Integer answer      = 0;
-                        if (percent > DARKNESS_THRESHOLD) {
-                            answer = 1;
-                        }
+                        // if (percent > DARKNESS_THRESHOLD) {
+                        //     answer = 1;
+                        // }
                         // Alternative logic
                         // if (mDetectShaded.isOMRFilled(omrROI, rect.getInt("top"), rect.getInt("left"), rect.getInt("bottom"), rect.getInt("right"))) {
                         //     answer = 1;
                         // }
+                        
+                        // New Logic	
+                        if (mDetectShaded.isOMRFilled(omrROI)) { 	
+                            answer = 1;	
+                        }
                         mRoiMatBase64.put(roiId,createBase64FromMat(omrROI));
                         mPredictedOMRs.put(roiId, answer.toString());
-                        Log.d(TAG, "key: " + roiId + " answer: " + answer.toString()+" percent "+percent);
+                        Log.d(TAG, "key: " + roiId + " answer: " + answer.toString());
                     }
 
                     if (roiConfig.getString("extractionMethod").equals("NUMERIC_CLASSIFICATION")) {
@@ -340,8 +344,15 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
             JSONObject layoutObject     = layoutConfigs.getJSONObject("layout");
             if(layoutObject.has("threshold")){
                 JSONObject threshold = layoutObject.getJSONObject("threshold");
-                layoutMinWidth=Integer.parseInt(threshold.getString("minWidth"));
-                layoutMinHeight=Integer.parseInt(threshold.getString("minHeight"));
+                if(threshold.has("minWidth") && threshold.getString("minWidth")!=null){
+                    layoutMinWidth=Integer.parseInt(threshold.getString("minWidth"));
+                }
+                if(threshold.has("minHeight") && threshold.getString("minHeight")!=null){
+                    layoutMinHeight=Integer.parseInt(threshold.getString("minHeight"));
+                }
+                if(threshold.has("minHeight") && threshold.getString("detectionRadius")!=null){
+                    detectionRadius=Integer.parseInt(threshold.getString("detectionRadius"));
+                }
             }
             JSONArray  cells            = layoutObject.getJSONArray("cells");
             for (int i = 0; i < cells.length(); i++) { 
@@ -421,9 +432,17 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
                             //Handling Multi Choice OMR Layout predictions
                             String prediction =mPredictedOMRs.get(roiId);
                             if(prediction!=null && prediction.equals("1")){
-                                result.put("prediction", String.valueOf(j));
-                                result.put("confidence", new Double(1.00));
-                                countOMRChoice++;
+                                if (cell.has("omrOptions")) {	
+                                   JSONArray omrOption = cells.getJSONObject(i).getJSONArray("omrOptions");	
+                                    result.put("prediction", omrOption.getString(j));	
+                                    result.put("confidence", new Double(1.00));	
+                                    countOMRChoice++;	
+                                    	
+                                } else {	
+                                    result.put("prediction", String.valueOf(j));	
+                                    result.put("confidence", new Double(1.00));	
+                                    countOMRChoice++;	
+                                }
                             }else{
                                 result.put("prediction", "");
                                 result.put("confidence", new Double(0.0));

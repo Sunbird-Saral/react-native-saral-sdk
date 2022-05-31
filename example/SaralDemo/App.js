@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Button, PermissionsAndroid, Alert } from 'react
 import SaralSDK from './SaralSDK'
 import SaralSpecData from './data/saral-physical-layout-representation-specs-example1.json'
 import DropDownMenu from './DropDownMenu';
-import { guj_1s_12Q, guj_1s_34Q, guj_1s_5Q, odisha_1s_20Q, up_20s_midday_meal, up_3s_30q_omr, up_4s_20q_omr, up_hindi_8s_13q_omr, up_multisubject_1s_10q } from './RoisLayout';
+import { guj_1s_12Q, guj_1s_34Q, guj_1s_5Q, odisha_1s_20Q, up_20s_midday_meal, up_3s_30q_omr, up_4s_20q_omr, up_hindi_8s_13q_omr, up_multisubject_1s_10q, _1S30Q_non_academic } from './RoisLayout';
 
 export default function App() {
 
@@ -87,7 +87,7 @@ export default function App() {
     }
   }
 
-  const roiDataList = ["Guj_1s_5Q", "Guj_1s_12Q", "Guj_1s_34Q", "Odisha_1s_20Q", "Up_4s_20q_omr", "Up_3s_30q_omr", "Up_multisubject_1s_10q", "Up_hindi_8s_13q_omr", "Up_20s_midday_meal"]
+  const roiDataList = ["Guj_1s_5Q", "Guj_1s_12Q", "Guj_1s_34Q", "Odisha_1s_20Q", "Up_4s_20q_omr", "Up_3s_30q_omr", "Up_multisubject_1s_10q", "Up_hindi_8s_13q_omr", "Up_20s_midday_meal","Non-Academic"]
 
   const onDropDownSelect = (idx, value) => {
     if (value == "Guj_1s_5Q") {
@@ -116,6 +116,9 @@ export default function App() {
     }
     else if (value == "Up_20s_midday_meal") {
       setSelectedRoiLayout(up_20s_midday_meal)
+    }
+    else if (value == "Non-Academic") {
+      setSelectedRoiLayout(_1S30Q_non_academic)
     }
 
     setRoiIndex(idx)
