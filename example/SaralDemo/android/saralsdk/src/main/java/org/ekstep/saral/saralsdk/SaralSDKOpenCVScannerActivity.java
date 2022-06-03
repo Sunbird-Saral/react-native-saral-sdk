@@ -204,7 +204,6 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba               = inputFrame.rgba();
-        Log.d(TAG, "isRelevantFrameAvailable  " + isRelevantFrameAvailable);
         if (!isRelevantFrameAvailable) {
             processCameraFrame(mRgba, mframeCount);
             mframeCount ++;
@@ -217,9 +216,8 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
     private void processCameraFrame(Mat image, long frameCount) {
         double DARKNESS_THRESHOLD   = 80.0;
         mStartTime                  = SystemClock.uptimeMillis();
-        loadLayoutConfiguration(); 
+        loadLayoutConfiguration();	
         Mat tableMat                = mTableCornerDetection.processMat(image,layoutMinWidth,layoutMinHeight,detectionRadius);
-        Log.d(TAG,"isMultiChoiceOMRLayout " + isMultiChoiceOMRLayout );
         if(isMultiChoiceOMRLayout)
         {
             DARKNESS_THRESHOLD = 70.0;
@@ -257,10 +255,10 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
                         // if (mDetectShaded.isOMRFilled(omrROI, rect.getInt("top"), rect.getInt("left"), rect.getInt("bottom"), rect.getInt("right"))) {
                         //     answer = 1;
                         // }
-                        
-                        // New Logic	
-                        if (mDetectShaded.isOMRFilled(omrROI)) { 	
-                            answer = 1;	
+
+                        // New Logic
+                        if (mDetectShaded.isOMRFilled(omrROI)) { 
+                            answer = 1;
                         }
                         mRoiMatBase64.put(roiId,createBase64FromMat(omrROI));
                         mPredictedOMRs.put(roiId, answer.toString());
@@ -305,7 +303,6 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
                         }
                     }
                 }
-                Log.d(TAG,"roissss " + rois);
                 return rois;
         } catch (JSONException e) {
             Log.e(TAG, "unable to parse LayoutConfigs object");
@@ -408,8 +405,7 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
                 JSONArray cellROIs      = cells.getJSONObject(i).getJSONArray("rois");
                 JSONObject cell = cells.getJSONObject(i);
                 boolean includeRois = (cell.has("page") && pageNumber!=null && cell.getString("page").equals(pageNumber)) || (!cell.has("page"));
-                Log.d(TAG, "includesRois " + includeRois);
-                if (includeRois) {	
+                if (includeRois) {
                 JSONArray trainingDataSet = new JSONArray();
                 int countOMRChoice =0;
                 for (int j = 0; j < cellROIs.length(); j++) {
@@ -417,7 +413,6 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
                     String roiId = roi.getString("roiId");
                     if (roi.getString("extractionMethod").equals("NUMERIC_CLASSIFICATION")) {
                         JSONObject result  = new JSONObject(mPredictedDigits.get(roiId));
-                        Log.d(TAG, "resultresult " + result);
                         roi.put("result", result);
                         if(mRoiMatBase64.get(roiId)!=null)
                         {
@@ -425,7 +420,6 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
                         }    
                     }
                     if (roi.getString("extractionMethod").equals("CELL_OMR")) {
-                        Log.d(TAG,"isMultiChoiceOMRLayout" + isMultiChoiceOMRLayout);
                         JSONObject result  = new JSONObject();
                         if(isMultiChoiceOMRLayout)
                         {
@@ -477,7 +471,6 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
             }
         }
         }
-        Log.d(TAG ,"layoutConfigslayoutConfigs" + layoutConfigs);
             return layoutConfigs;
         } catch (JSONException e) {
             Log.e(TAG, "unable to create response LayoutConfigs object");

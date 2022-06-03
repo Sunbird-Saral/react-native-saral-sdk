@@ -175,14 +175,33 @@ public class TableCornerCirclesDetection {
         return croppedImage;
     }
 
-    private void showProcessingInformation(Mat image) {	
-        String text     = ">>>>>> Please focus the camera by moving up or down <<<<< ";	
-        Point position  = new Point(image.width()/6, image.height() / 2);	
-        Scalar color    = new Scalar(255, 0, 0);	
-        int font        = org.opencv.core.Core.FONT_HERSHEY_SIMPLEX;	
-        int scale       = 1;	
-        int thickness   = 2;	
-        Imgproc.putText(image, text, position, font, scale, color, thickness);	
+    private void showFocusAlert(Mat image) {
+        String text     = ">>>>>> Please focus the camera by moving up or down <<<<< ";
+        Point position  = new Point(image.width()/6, image.height() / 2);
+        Scalar color    = new Scalar(255, 0, 0);
+        int font        = org.opencv.core.Core.FONT_HERSHEY_SIMPLEX;
+        int scale       = 1;
+        int thickness   = 2;
+        Imgproc.putText(image, text, position, font, scale, color, thickness);
+    }
+    private final boolean hasLayoutDetectionCircles(Mat src, Mat circles,int detectionRadius) {
+        boolean isValid= true;
+        if (circles.cols() > 0) {
+            for (int x = 0; x < circles.cols(); x++) {
+                double[] c = circles.get(0, x);
+                Point center = new Point(Math.round(c[0]), Math.round(c[1]));
+                // circle outline
+                int radius = (int) Math.round(c[2]);
+                if(radius < detectionRadius){ // Detection circle radius is 19
+                    isValid= false;
+                    break;
+                }
+                if (DEBUG) {
+                    Imgproc.circle(src, center, radius, new Scalar(255, 0, 255), 3, 8, 0);
+                }
+            }
+        }
+        return isValid;
     }
 
     private final void drawDetectedCircles(Mat src, Mat circles) {
@@ -194,6 +213,7 @@ public class TableCornerCirclesDetection {
                 Imgproc.circle(src, center, 1, new Scalar(0,100,100), 3, 8, 0 );
                 // circle outline
                 int radius = (int) Math.round(c[2]);
+                // Log.d(TAG, "drawDetectedCircles Circle ("+x+") Radius :: " + radius);
                 Imgproc.circle(src, center, radius, new Scalar(255,0,255), 3, 8, 0 );
             }
         }
