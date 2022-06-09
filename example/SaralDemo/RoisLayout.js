@@ -16856,7 +16856,7 @@ export const _1S30Q_non_academic = {
                     "value": "QUESTION 1"
                 },
                 "validate": {
-                    "regExp": "[A-Z]",
+                    "regExp": "[A-G]",
                     "errorMsg": "Please enter valid option (A B C D E F G)"
                 },
                 "omrOptions": ["A","B","C","D","E","F","G"]
@@ -17335,7 +17335,7 @@ export const _1S30Q_non_academic = {
                     "value": "QUESTION 8"
                 },
                 "validate": {
-                    "regExp": "[A-Z]",
+                    "regExp": "[A-G]",
                     "errorMsg": "Please enter valid option (A B C D E F G)"
                 },
                 "omrOptions": ["A","B","C","D","E","F","G"]
@@ -17441,10 +17441,10 @@ export const _1S30Q_non_academic = {
                     "value": "QUESTION 10"
                 },
                 "validate": {
-                    "regExp": "[A]",
-                    "errorMsg": "Please enter valid option (A)"
+                    "regExp": "[Y,N]",
+                    "errorMsg": "Please enter valid option (Y N)"
                 },
-                "omrOptions": ["A"]
+                "omrOptions": ["Y","N"]
             },
             {
                 "cellId": "12",
@@ -17470,10 +17470,10 @@ export const _1S30Q_non_academic = {
                     "value": "QUESTION 11"
                 },
                 "validate": {
-                    "regExp": "[A]",
-                    "errorMsg": "Please enter valid option (A)"
+                    "regExp": "[Y,N]",
+                    "errorMsg": "Please enter valid option (Y N)"
                 },
-                "omrOptions": ["A"]
+                "omrOptions": ["Y","N"]
             },
             {
                 "cellId": "13",
@@ -17894,10 +17894,10 @@ export const _1S30Q_non_academic = {
                     "value": "QUESTION 19"
                 },
                 "validate": {
-                    "regExp": "[A]",
-                    "errorMsg": "Please enter valid option (A)"
+                    "regExp": "[Y,N]",
+                    "errorMsg": "Please enter valid option (Y N)"
                 },
-                "omrOptions": ["A"]
+                "omrOptions": ["Y","N"]
             },
             {
                 "cellId": "21",
