@@ -63,10 +63,10 @@ public class DetectShaded {
         Imgproc.cvtColor(imageMat, gray, Imgproc.COLOR_BGR2GRAY);
         Imgproc.GaussianBlur(gray, gray, new Size(3, 3), 0);
         Mat threshInv= new Mat();
-        double otsu_thresh_val =Imgproc.threshold(gray, threshInv, 0, 255, Imgproc.THRESH_BINARY_INV + Imgproc.THRESH_OTSU);	
-        otsu_thresh_val =Imgproc.threshold(gray, threshInv, otsu_thresh_val-50 , 255, Imgproc.THRESH_BINARY_INV);	
-        isOMRFilled = Core.countNonZero(threshInv) >= _OMR_FILLED_THRESHOULD;	
-        return isOMRFilled;	
+        double otsu_thresh_val =Imgproc.threshold(gray, threshInv, 0, 255, Imgproc.THRESH_BINARY_INV + Imgproc.THRESH_OTSU);
+        otsu_thresh_val =Imgproc.threshold(gray, threshInv, otsu_thresh_val-50 , 255, Imgproc.THRESH_BINARY_INV);
+        isOMRFilled = Core.countNonZero(threshInv) >= _OMR_FILLED_THRESHOULD;
+        return isOMRFilled;
     }
 
     public Mat getROIMat(Mat image, int top, int left, int bottom, int right) {

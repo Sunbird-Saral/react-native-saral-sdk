@@ -62,7 +62,7 @@ public class TableCornerCirclesDetection {
         if (DEBUG) {
             drawDetectedCircles(image, circles);
         }
-
+        
         if (circles.cols() > 0) {
             Point topLeft, topRight;
             Point bottomLeft, bottomRight;
@@ -92,7 +92,7 @@ public class TableCornerCirclesDetection {
                 bottomLeft  = leftPoints.get(1);
                 bottomRight = rightPoints.get(1);
 
-                // distance
+                // distance 
                 mROI        = (bottomRight.x - topLeft.x) * (bottomLeft.y - topRight.y);
                 int minY        = Math.min((int)topLeft.y, (int)topRight.y);
                 int maxY        = Math.max((int)bottomLeft.y, (int)bottomRight.y);
@@ -103,12 +103,13 @@ public class TableCornerCirclesDetection {
                 int maxWidth    = maxX-minX;
 
                 Rect rectCrop = new Rect((int)((int)topLeft.x+(int)bottomLeft.x)/2, (int)topLeft.y-5, maxWidth, maxHeight+10);
-                Log.d(TAG, "TableCornerCirclesDetection::processMat() Rect Width " + rectCrop.width+" Rect Height "+rectCrop.height);	
-                if(minWidth > 0 && minHeight > 0 && (rectCrop.width < minWidth || rectCrop.height < minHeight))	
-                {	
-                    showFocusAlert(image);	
-                    return null;	
+                Log.d(TAG, "TableCornerCirclesDetection::processMat() Rect Width " + rectCrop.width+" Rect Height "+rectCrop.height);
+                if(minWidth > 0 && minHeight > 0 && (rectCrop.width < minWidth || rectCrop.height < minHeight))
+                {
+                    showFocusAlert(image);
+                    return null;
                 }
+
                 if (0 <= rectCrop.x
                         && 0 <= rectCrop.width
                         && rectCrop.x + rectCrop.width <= image.cols()
@@ -129,9 +130,9 @@ public class TableCornerCirclesDetection {
                         CVOperations.saveImage(croppedMat, "table", 3, false);
                     return croppedMat;
                 }
-            }else{	
-                    showFocusAlert(image);	
-                    return null;
+            }else{
+                showFocusAlert(image);
+                return null;
             }
         }
         return null;

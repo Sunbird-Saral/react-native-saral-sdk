@@ -341,16 +341,16 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
             JSONObject layoutObject     = layoutConfigs.getJSONObject("layout");
             if(layoutObject.has("threshold")){
                 JSONObject threshold = layoutObject.getJSONObject("threshold");
-                if(threshold.getString("minWidth")!=null){
+                if(threshold.has("minWidth") && threshold.getString("minWidth")!=null){
                     layoutMinWidth=Integer.parseInt(threshold.getString("minWidth"));
                 }
-                if(threshold.getString("minHeight")!=null){
+                if(threshold.has("minHeight") && threshold.getString("minHeight")!=null){
                     layoutMinHeight=Integer.parseInt(threshold.getString("minHeight"));
                 }
-                if(threshold.getString("detectionRadius")!=null){	
-                    detectionRadius=Integer.parseInt(threshold.getString("detectionRadius"));	
-                }                	
-            }	
+                if(threshold.has("minHeight") && threshold.getString("detectionRadius")!=null){
+                    detectionRadius=Integer.parseInt(threshold.getString("detectionRadius"));
+                }
+            }
             JSONArray  cells            = layoutObject.getJSONArray("cells");
             for (int i = 0; i < cells.length(); i++) { 
                 JSONObject cell = cells.getJSONObject(i);
@@ -426,10 +426,24 @@ public class SaralSDKOpenCVScannerActivity extends ReactActivity implements Came
                             //Handling Multi Choice OMR Layout predictions
                             String prediction =mPredictedOMRs.get(roiId);
                             if(prediction!=null && prediction.equals("1")){
-                                result.put("prediction", String.valueOf(j));
+                                if (cell.has("omrOptions")) {	
+                                   JSONArray omrOption = cells.getJSONObject(i).getJSONArray("omrOptions");	
+                                    result.put("prediction", omrOption.getString(j));	
+                                    result.put("confidence", new Double(1.00));	
+                                    countOMRChoice++;	
+                                    	
+                                } else {	
+                                    result.put("prediction", String.valueOf(j));	
+                                    result.put("confidence", new Double(1.00));	
+                                    countOMRChoice++;	
+                                }
+                            }
+                            else if(cellROIs.length() == 1 && cell.has("omrOptions")){
+                                JSONArray omrOption = cells.getJSONObject(i).getJSONArray("omrOptions");
+                                result.put("prediction", omrOption.getString(1));
                                 result.put("confidence", new Double(1.00));
-                                countOMRChoice++;
-                            }else{
+                        }
+                            else{
                                 result.put("prediction", "");
                                 result.put("confidence", new Double(0.0));
                             }
