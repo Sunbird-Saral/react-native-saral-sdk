@@ -3755,6 +3755,12 @@ export const up_4s_20q_omr = {
     "layout": {
         "version": "1.0",
         "name": "HINDI4S20QOMR Exam Sheet Form",
+        "threshold": {
+            "minWidth": 690,
+            "minHeight": 390,
+            "detectionRadius": 12,
+            "experimentalOMRDetection": true
+        },
         "cells": [
             {
                 "cellId": "1",
