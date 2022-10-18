@@ -2,6 +2,11 @@ export const guj_1s_12Q = {
     "layout": {
         "version": "1.0",
         "name": "ANY1S12Q Exam Sheet Form",
+        "threshold": {
+            "minWidth": 0,
+            "minHeight": 0,
+            "detectionRadius": 12
+        },
         "cells": [
             {
                 "cellId": "1",
@@ -578,6 +583,11 @@ export const guj_1s_5Q = {
     "layout": {
         "version": "1.0",
         "name": "ANY1S5QMULTICHOICE Exam Sheet Form",
+        "threshold": {
+            "minWidth": 0,
+            "minHeight": 0,
+            "detectionRadius": 12
+        },
         "cells": [
             {
                 "cellId": "1",
@@ -1121,6 +1131,11 @@ export const guj_1s_34Q = {
     "layout": {
         "version": "1.0",
         "name": "GUJRAT PAT Exam Sheet Form",
+        "threshold": {
+            "minWidth": 0,
+            "minHeight": 0,
+            "detectionRadius": 12
+        },
         "cells": [
             {
                 "cellId": "1",
@@ -2657,6 +2672,11 @@ export const odisha_1s_20Q = {
     "layout": {
         "version": "1.0",
         "name": "ANY1S10Q SAT Exam Sheet Form",
+        "threshold": {
+            "minWidth": 0,
+            "minHeight": 0,
+            "detectionRadius": 12
+        },
         "cells": [
             {
                 "cellId": "1",
@@ -6326,6 +6346,11 @@ export const up_3s_30q_omr = {
     "layout": {
         "version": "1.0",
         "name": "HINDI3S30QOMR Exam Sheet Form",
+        "threshold": {
+            "minWidth": 0,
+            "minHeight": 0,
+            "detectionRadius": 12
+        },
         "cells": [
             {
                 "cellId": "1",
@@ -9062,6 +9087,11 @@ export const up_multisubject_1s_10q = {
     "layout": {
         "version": "1.0",
         "name": "UP SAT Exam Sheet Form",
+        "threshold": {
+            "minWidth": 0,
+            "minHeight": 0,
+            "detectionRadius": 12
+        },
         "cells": [
             {
                 "cellId": "1",
@@ -14086,6 +14116,11 @@ export const up_20s_midday_meal = {
     "layout": {
         "version": "1.0",
         "name": "ANY20QMIDDAYMEAL Exam Sheet Form",
+        "threshold": {
+            "minWidth": 0,
+            "minHeight": 0,
+            "detectionRadius": 12
+        },
         "cells": [
             {
                 "cellId": "1",
@@ -16616,7 +16651,9 @@ export const _1S30Q_non_academic = {
         "version": "1.0",
         "name": "ANY1S30QMULTICHOICE Exam Sheet Form",
         "threshold": {
-            "detectionRadius":12
+            "minWidth": 0,
+            "minHeight": 0,
+            "detectionRadius": 12
         },
         "cells": [
             {
@@ -18652,6 +18689,11 @@ export const Hindi_8s_13q_9D_omr = {
     "layout": {
         "version": "1.0",
         "name": "HINDI8S13_9DQOMR Exam Sheet Form",
+        "threshold": {
+            "minWidth": 0,
+            "minHeight": 0,
+            "detectionRadius": 12
+        },
         "cells": [
             {
                 "cellId": "1",
