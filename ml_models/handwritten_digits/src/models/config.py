@@ -17,7 +17,7 @@ BATCH_SIZE=128
 PRETRAINED_WEIGHT_PATH='../../models/trained_resnet_model_v2_10.h5'
 # /home/venkateshiyer/ml_models/handwritten_digits/data/raw
 #### datset path
-IMAGE_PATH="/home/venkateshiyer/ml_models/handwritten_digits/data/raw/*/*.jpg"
+IMAGE_PATH="../../data/raw/*/*.jpg"
 
 ####size of the dataset to use for validation the trained model
 TEST_DATA_SIZE=4
