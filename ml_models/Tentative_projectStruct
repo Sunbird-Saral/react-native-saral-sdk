@@ -1,0 +1,86 @@
+Project struct:
+- Readme.md
+- data
+	- raw handwritten numbers
+	- raw alpha-numeric
+-models (trained models)
+	- handwritten numbers
+		tf model, tflite model
+	- handwritten alpha-numeric
+		tf model, tflite model
+- notebooks
+	- experiment1
+		readme - about dataste, hyperparameters, etc.
+	- experiment2
+	.
+	.
+- reports (??)
+	-figures
+		- experiment1 
+			graph analysis
+		- experiment2
+			graph analysis
+		.
+		.
+- requirements.txt
+- src
+	- __init__.py
+	- models
+		model.py - Resnet architecture
+		trainmodel.py
+		predictmodel.py
+	-utils
+		-helperfunctions.py (data augmentation, normalization) - rough idea
+	- config.py
+
+
+OR
+
+- react-native-saral-sdk
+	- ml_models
+	- one more readme - direct links to both the models - Basic info of the repo too.
+		-Handwritten_digits
+			-readme.md
+			-data
+				- makedataset (??)
+					-makedataset.py
+						A script to download data from Drive.sh
+				- raw 
+					-1
+					-2
+					.
+					.
+			-models
+				- experiment1
+					tf model, tflite.model, date
+				- experiment2
+					....
+			-notebooks
+				-experiment1
+					readme file (about dataset, hyperparameters, augmentations, etc.)
+				-experiment2
+					.....
+			-reports(??) - Based on final model, we can use it - Dileep comment  -- Make a folder structre in Google drive. -- Dileep
+				- figures
+					- experiment1
+						graphs
+					- experiment2
+						...
+
+			-requirements.txt
+			-src
+				- __init__.py
+				- models
+					basemodel.py
+					resnetmodel.py - Resnet architecture
+					trainmodel.py
+					predictmodel.py
+				-utils
+					-helperfunctions.py (data augmentation, normalization) - rough idea
+				- config.py
+
+		-Handwritten_alpha-numeric
+			.
+			.
+			.
+		-Handwritten_Free_text
