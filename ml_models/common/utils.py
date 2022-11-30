@@ -1,7 +1,8 @@
 import cv2
 import matplotlib.pyplot as plt
 import sys
-sys.path.append('../../ml_models/handwritten_digits/src/models')
+sys.path.append('../../ml_models/handwritten_digits/src')
+sys.path.append('../../ml_models/handwritten_alpha-numeric/src')
 import random
 import numpy as np
 import glob

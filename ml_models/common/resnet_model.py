@@ -1,5 +1,6 @@
 import sys
-sys.path.append('../../ml_models/handwritten_digits/src/models')
+sys.path.append('../../ml_models/handwritten_digits/src')
+sys.path.append('../../ml_models/handwritten_alpha-numeric/src')
 from tensorflow.keras.callbacks import ReduceLROnPlateau
 from tensorflow.keras.layers import Input, Conv2D, BatchNormalization, ZeroPadding2D, GlobalAveragePooling2D, Activation, Dense, add
 from tensorflow.keras.models import Model
@@ -10,7 +11,7 @@ import config
 
 DEPTH = 164
 MODEL_NAME = f'ResNet{DEPTH}'
-
+print(config.NO_OF_CLASS)
 class ResNet164(BaseModel):
     '''
     1. ZeroPadding2D (2, 2)
@@ -62,7 +63,7 @@ class ResNet164(BaseModel):
         y = BatchNormalization()(y)
         y = Activation('relu')(y)
         y = GlobalAveragePooling2D()(y)
-        y = Dense(units = config.NO_OF_CLASS)(y) # Make it configurable - Dileep comment
+        y = Dense(units = config.NO_OF_CLASS)(y)
         y = Activation('softmax')(y)
 
         return Model(x, y, name = MODEL_NAME)
