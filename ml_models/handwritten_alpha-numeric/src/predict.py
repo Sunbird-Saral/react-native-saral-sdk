@@ -4,25 +4,55 @@ import cv2
 import glob
 import numpy as np
 
-def pred_using_h5_digit(path):
+def pred_using_h5_digit(model, path):
     result = {}
     wrong_count=0
     for img1 in sorted(glob.iglob(path)):
+        print(img1)
         img=cv2.imread(img1)
         img= cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img = img.astype('float32') / 255.
         img=np.reshape(img,(1,28,28,1))
         res=model.predict(img)
         pred=res[0].argmax(axis=0)
-        ground = int(img1.split('/')[8])
-        name = img1.split('/')[-2]
-        if pred!=ground:
-            result[name]=pred
+        ground = img1.split('/')[-1] 
+        ground_truth = ground.split('_')[0]
+        result[img1] = pred
+        if pred!= int(ground_truth):
             wrong_count+=1
     accuracy = (len(glob.glob(path))-wrong_count)/len(glob.glob(path))
-    return result
+    return result, accuracy
 
-if __name__ == '__main__':
-    model = tf.keras.models.load_model(os.path.expanduser('~')+'/ml_models/handwritten_alpha-numeric/models')
-    path = os.path.expanduser('~')+'/ml_models/handwritten_alpha-numeric/data/test/*'
-    pred_using_h5_digit(path)
+def pred_using_tflite_model(model, img_path):
+    tflite_interpreter = tf.lite.Interpreter(model_path=model)
+    tflite_interpreter.allocate_tensors()
+    input_index = tflite_interpreter.get_input_details()
+    output_index = tflite_interpreter.get_output_details()
+    
+    result = {}
+    wrong_count=0; correct_count=0
+    for img1 in sorted(glob.glob(img_path)):
+        img_name= img1.split("/")[-1]
+        img=cv2.imread(img1)
+        img=cv2.resize(img,(28,28))
+        img= cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = np.array(img,dtype=np.float32) / 255.0
+        img=np.reshape(img,(1,28,28,1))
+        tflite_interpreter.set_tensor(input_index[0]['index'],img)
+        tflite_interpreter.invoke()
+        predictions = tflite_interpreter.get_tensor(output_index[0]['index'])
+        pred=predictions[0].argmax(axis=0)
+        label = img_name.split("_")[0]
+        result[img1] = pred  
+        if int(label)!=pred:
+            wrong_count+=1
+            # result[img_name]={"ground":label,"prediction":pred}
+        else:
+            correct_count+=1 
+    accuracy = (len(glob.glob(img_path))-wrong_count)*100/len(glob.glob(img_path))
+    return result,accuracy
+
+# if __name__ == '__main__':
+#     model = os.path.expanduser('~')+'/react-native-saral-sdk/ml_models/handwritten_alpha-numeric/models/pre_trained/resnet_trained_model_alphanumeric_with_printed_v1_new_finetune_13_08_22_epoch_23.h5'
+#     path = os.path.expanduser('~')+'/react-native-saral-sdk/ml_models/handwritten_alpha-numeric/data/test/*'
+#     pred_using_h5_digit(model, path)

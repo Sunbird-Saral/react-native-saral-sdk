@@ -1,34 +1,33 @@
+# To save the training checkpoint at the end of training
 SAVE_MODEL=True
 
-### path where you want to save the trained model
+# path to save the trained model
+SAVE_MODEL_PATH="../models/saved_model/new_model.h5"
 
-# SAVE_MODEL_PATH="./models/new/new_dataset_training_1.h5"
-SAVE_MODEL_PATH = "/home/venkateshiyer/ml_models/handwritten_alpha-numeric/models"
-### any keras(.h5) model path which you want to convert into tflite
-# H5_MODEL_PATH="./models/trained_resnet_model_v4.h5"
+# To convert .h5 (keras model) to a tflite model
+H5_MODEL_PATH="../models/saved_model/new_model.h5"
 
-### flite  model save path
-# TF_LITE_SAVE_PATH="./models/hw_recog_digit_tmp.tflite"
-### total number of epochs you want to train the model
+# tflite  model save path
+TF_LITE_SAVE_PATH="../models/tflite_model/an_recog_digit_tmp.tflite"
+
+# total number of epochs you want to train the model
 EPOCH=50
 BATCH_SIZE=128
-### Path of pretrained model to finetune it on new batch of dataset
 
-PRETRAINED_WEIGHT_PATH='../../models/trained_resnet_model_v2_10.h5'
-# /home/venkateshiyer/ml_models/handwritten_digits/data/raw
-#### datset path
+# Path of pretrained Resnet model to finetune it on new batch of dataset
+PRETRAINED_WEIGHT_PATH='../models/pre-trained_model/trained_resnet_model_letter_digit_v0_24_epoch_basemodel.h5'
+
+# training dataset path
 IMAGE_PATH="../data/raw/*/*.jpg"
 
-####size of the dataset to use for validation the trained model
+# size of the dataset to use for validation of the trained model
 TEST_DATA_SIZE=4
 
-TEST_DATA_PATH = '../../data/test/*/*.jpg'
-
-##### if you want to use pre rained model as an initializer thwn FINE_TUNE should be True
+#if you want to use pre rained model as an initializer then FINE_TUNE should be True
 FINE_TUNE=False
 
-#### we can data augmentation True if dataset is small with less variation.
+# we can data augmentation True if dataset is small with less variation
 DATA_AUGMENTATION=False
 
-# 0-9:Digits and 10-36:Block letters
+# 0-9:Digits, 10:Noise, and 11-36: Block letters
 NO_OF_CLASS = 37
