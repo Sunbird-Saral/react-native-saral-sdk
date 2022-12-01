@@ -9,7 +9,6 @@ import glob
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from collections import defaultdict
-# from handwritten_digits.src.models import config
 import config
 
 def normalize_images(images):
