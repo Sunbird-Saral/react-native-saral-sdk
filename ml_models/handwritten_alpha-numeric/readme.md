@@ -33,7 +33,7 @@ $ keras_to_tf_converter.py
 - Place test dataset inside data/test
 - Inference images should be in the form 1_3.jpg, 9_3445.jpg, etc. (i.e classname_random digit.jpg)
 - Go to src/
-- Use predict.ipynb file for inferencing
+- Use predict.ipynb file for inferencing. Get the ground truth image and it's prediction (as title of the image)
 
 ## Notebooks and reports
 - Experiment notebooks are inside notebooks/
