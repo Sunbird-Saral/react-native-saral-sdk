@@ -12,7 +12,7 @@ This repository is for handwritten digit recognition which is integrated to Sara
 
 ## To train the model
 - Go to src/
-- Using the config.py file, we can update the model specific parameters. Post training, the model will be saved in the given path
+- Using the config.py file, we can update the model specific parameters and augment the training data. Post training, the model will be saved in the given path
 - To start the training
 ```bash
 $ python train.py 
