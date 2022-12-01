@@ -3,7 +3,7 @@ This repository is for handwritten digit recognition which is integrated to Sara
 
 ## Dataset
 - The dataset has to be placed inside data/raw  
-- It will consist of 11 folders in total (i.e 0-9 classes and 10 as noise class)
+- It will consist of 11 folders in total (i.e 0-9: digit classes and 10: noise class)
 - In case dataset not available, please download from: 
 
 ## Pre-trained Resnet model
