@@ -1,35 +1,14 @@
-#Basic info:
-This repo is the ML based OCR implementation for recognition of handwritten digits and alphanumeric data on OMR marksheet 
+# Saral OCR Assets
 
+This repository is integrated to Saral project. Saral is an OCR-plus application that is capable of doing OCR and can also understand the structure of the physical input.
 
-This repo conists of 3 folders:
-    - Common
-    - handwritten_alpha-numeric
-    - handwritten_digtis
+###### To install dependencies, run this command line
+```bash
+$ pip install -r requirements.txt 
+```
 
-
+This repository conists of 3 folders:
 - Common - Contains model architecture and helper fuctions (data augmentation on fly, loading dataset etc. )
-- handwritten_alpha-numeric - Contains dataset, experiment notebooks, training, and inference pipeline for the alpha-numeric dataset (Details as link)
-- handwritten_digtis - Contains dataset, experiment notebooks, training, and inference pipeline for  handwritten digits dataset (Details as a link)
-
-
-(Link will bring you here)
-- handwritten_digits:
-Draw a tree folder structure for better understanding
-
-This folder contains:
-    - Data
-        - raw - Consists of the raw dataset for all classes (i.e 0-9 digits and 10 as noise)
-        - test - Consists of inference/ test dataset
-    - models 
-        - pretrained - Consists pre-trained Resnet model
-        - saved models - Consists of training checkpoints
-    - notebooks
-        (Folder per each experiment - E.g experiment1, experiment2,...)
-        - experiment1
-            - readme.md - Basic information of the training and prediction cycle
-            - prediction.ipynb - Jupyter notebook that constists the prediction pipeline (for .h5 and .tflite models)
-    - src
-        - config.py - Parameters to configure the training piplelie (augmentation(bool), no. of classes(11 for digits/ 37 for alpha-numeric), path to save model, path to pretrained weights, etc. )
-        - train. py - Training pipeline for handwritten digits
-        - predict.py - Prediction pipeline for handwritten digits
+- [handwritten_alpha-numeric](https://github.com/Sunbird-Saral/react-native-saral-sdk/tree/enhancement/ml_folder_struct/ml_models/handwritten_alpha-numeric) - Contains dataset, training, and inference pipeline for the alpha-numeric data recognition.
+- [handwritten_digits](https://github.com/Sunbird-Saral/react-native-saral-sdk/tree/enhancement/ml_folder_struct/ml_models/handwritten_digits) - Contains dataset, training, and inference pipeline for handwritten digits recognition.
+- free-text extraction - TBD
