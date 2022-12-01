@@ -28,6 +28,7 @@ class BaseModel(object):
     def fit_generator(self, training_data, validation_data, epochs, batch_size):
         x_train, y_train = training_data
         x_val, y_val = validation_data
+        
 
         train_datagen = get_train_generator(x_train, y_train,
                                                   batch_size = batch_size)
