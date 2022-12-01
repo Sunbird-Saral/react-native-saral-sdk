@@ -3,12 +3,12 @@ This repository is for handwritten digit recognition which is integrated to Sara
 
 ## Dataset
 - The dataset has to be placed inside data/raw  
-- It will consist of 11 folders in total (i.e 0-9: digit classes and 10: noise class)
-- In case dataset not available, please download from: 
+- It will consist of 11 folders (1 folder per class) in total (i.e 0-9: digit classes and 10: noise class)
+- In case more dataset needed, download from: [Link](https://drive.google.com/drive/folders/1pN6_j8BBoB9yacUNCXE37d6qKK6NtOpo?usp=share_link) and place it in the same folder structure as mentioned above
 
 ## Pre-trained Resnet model
 - The pre-trained Resnet model is placed inside models/ 
-- Incase model not available, please download the pre-trained weights from:
+- Can also be downloaded the pre-trained weights from: [Link](https://drive.google.com/file/d/1PZVfCDYWsmK0ejpv0r3-i0dOq-JvQgLi/view?usp=share_link)
 
 ## To train the model
 - Go to src/
