@@ -11,7 +11,7 @@ import config
 
 DEPTH = 164
 MODEL_NAME = f'ResNet{DEPTH}'
-print(config.NO_OF_CLASS)
+
 class ResNet164(BaseModel):
     '''
     1. ZeroPadding2D (2, 2)
