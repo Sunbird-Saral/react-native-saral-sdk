@@ -10,4 +10,4 @@ $ pip install -r requirements.txt
 This repository conists of 3 folders:
 - Common - Contains model architecture and helper fuctions (data augmentation on fly, loading dataset etc. )
 - handwritten_alpha-numeric - Contains dataset, training, and inference pipeline for the alpha-numeric data recognition.
-- handwritten_digtis - Contains dataset, training, and inference pipeline for handwritten digits recognition. [Playbook link](react-native-saral-sdk/ml_models/handwritten_digits/readme.md)
+- handwritten_digtis - Contains dataset, training, and inference pipeline for handwritten digits recognition. [Playbook link](https://github.com/Sunbird-Saral/react-native-saral-sdk/tree/enhancement/ml_folder_struct/ml_models/handwritten_digits)
