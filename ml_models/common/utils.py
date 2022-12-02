@@ -77,8 +77,8 @@ def load_mnist():
     num_of_test_data = config.TEST_DATA_SIZE
     x_val = x_train[num_of_test_data:]
     y_val = y_train[num_of_test_data:]
-    x_train = x_train[:num_of_test_data]
-    y_train = y_train[:num_of_test_data]
+    # x_train = x_train[:num_of_test_data]
+    # y_train = y_train[:num_of_test_data]
     
     return (x_train, y_train), (x_val, y_val), (x_test, y_test)
 
