@@ -1,5 +1,5 @@
 # Handwritten digit recognition - Playbook
-This repository is for handwritten digit recognition which is integrated to Saral project. Saral is an OCR-plus application that is capable of doing OCR and can also understand the structure of the physical input.
+Please find the handwritten digit recognition asset details below. 
 
 ## Used architecture
 [Resnet 164](https://arxiv.org/abs/1603.05027)
@@ -17,13 +17,13 @@ This repository is for handwritten digit recognition which is integrated to Sara
 - Go to src/
 - Using the config.py file, we can update the model specific parameters and augment the training data. Post training, the model will be saved in the given path
 - To start the training
-``bash
+``
 $ python train.py 
 ``
 ## Keras to tflite model converter
 - Go to src/
-- Run keras_to_tf_converter.py module to convert keras model to tflite model. Pass location of .h5 model as argument
-``bash
+- Run keras_to_tf_converter.py module to convert keras model to tflite model.
+``
 $ keras_to_tf_converter.py
 ``
 - Use config.py file to give the path of keras model and save path to save the tflite model
