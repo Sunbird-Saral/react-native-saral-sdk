@@ -6,10 +6,12 @@ import numpy as np
 
 def pred_using_h5_digit(model, path):
     result = {}
+    prediction = []
+    gt = []
     wrong_count=0
     for img1 in sorted(glob.iglob(path)):
-        print(img1)
         img=cv2.imread(img1)
+        img=cv2.resize(img,(28,28))
         img= cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img = img.astype('float32') / 255.
         img=np.reshape(img,(1,28,28,1))
@@ -18,10 +20,12 @@ def pred_using_h5_digit(model, path):
         ground = img1.split('/')[-1] 
         ground_truth = ground.split('_')[0]
         result[img1] = pred
+        prediction.append(pred)
+        gt.append(int(ground_truth))
         if pred!= int(ground_truth):
             wrong_count+=1
     accuracy = (len(glob.glob(path))-wrong_count)/len(glob.glob(path))
-    return result, accuracy
+    return result, accuracy, prediction, gt
 
 def pred_using_tflite_model(model, img_path):
     tflite_interpreter = tf.lite.Interpreter(model_path=model)
@@ -52,7 +56,7 @@ def pred_using_tflite_model(model, img_path):
     accuracy = (len(glob.glob(img_path))-wrong_count)*100/len(glob.glob(img_path))
     return result,accuracy
 
-# if __name__ == '__main__':
-#     model = os.path.expanduser('~')+'/react-native-saral-sdk/ml_models/handwritten_alpha-numeric/models/pre_trained/resnet_trained_model_alphanumeric_with_printed_v1_new_finetune_13_08_22_epoch_23.h5'
-#     path = os.path.expanduser('~')+'/react-native-saral-sdk/ml_models/handwritten_alpha-numeric/data/test/*'
-#     pred_using_h5_digit(model, path)
+if __name__ == '__main__':
+    model = tf.keras.models.load_model(os.path.expanduser('~')+'/react-native-saral-sdk/ml_models/handwritten_alpha-numeric/models/pre-trained_model/resnet_trained_model_alphanumeric_with_printed_v1_new_finetune_13_08_22_epoch_23.h5')
+    path = os.path.expanduser('~')+'/react-native-saral-sdk/ml_models/handwritten_alpha-numeric/data/test/*'
+    pred_using_h5_digit(model, path)
