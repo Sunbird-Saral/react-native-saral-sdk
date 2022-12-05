@@ -32,7 +32,8 @@ def pred_using_tflite_model(model, img_path):
     tflite_interpreter.allocate_tensors()
     input_index = tflite_interpreter.get_input_details()
     output_index = tflite_interpreter.get_output_details()
-    
+    prediction = []
+    gt = []
     result = {}
     wrong_count=0; correct_count=0
     for img1 in sorted(glob.glob(img_path)):
@@ -47,6 +48,8 @@ def pred_using_tflite_model(model, img_path):
         predictions = tflite_interpreter.get_tensor(output_index[0]['index'])
         pred=predictions[0].argmax(axis=0)
         label = img_name.split("_")[0]
+        prediction.append(pred)
+        gt.append(int(label))
         result[img1] = pred  
         if int(label)!=pred:
             wrong_count+=1
@@ -55,8 +58,3 @@ def pred_using_tflite_model(model, img_path):
             correct_count+=1 
     accuracy = (len(glob.glob(img_path))-wrong_count)*100/len(glob.glob(img_path))
     return result,accuracy
-
-if __name__ == '__main__':
-    model = tf.keras.models.load_model(os.path.expanduser('~')+'/react-native-saral-sdk/ml_models/handwritten_alpha-numeric/models/pre-trained_model/resnet_trained_model_alphanumeric_with_printed_v1_new_finetune_13_08_22_epoch_23.h5')
-    path = os.path.expanduser('~')+'/react-native-saral-sdk/ml_models/handwritten_alpha-numeric/data/test/*'
-    pred_using_h5_digit(model, path)

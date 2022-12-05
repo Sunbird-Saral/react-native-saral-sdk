@@ -6,6 +6,8 @@ import numpy as np
 
 def pred_using_h5_digit(model, path):
     result = {}
+    prediction = []
+    gt=[]
     wrong_count=0
     for img1 in sorted(glob.iglob(path)):
         img=cv2.imread(img1)
@@ -16,6 +18,8 @@ def pred_using_h5_digit(model, path):
         pred=res[0].argmax(axis=0)
         ground = img1.split('/')[-1] 
         ground_truth = ground.split('_')[0]
+        prediction.append(pred)
+        gt.append(int(ground_truth))
         result[img1] = pred
         if pred!= int(ground_truth):
             wrong_count+=1
@@ -27,7 +31,8 @@ def pred_using_tflite_model(model, img_path):
     tflite_interpreter.allocate_tensors()
     input_index = tflite_interpreter.get_input_details()
     output_index = tflite_interpreter.get_output_details()
-    
+    prediction = []
+    gt = []
     result = {}
     wrong_count=0; correct_count=0
     for img1 in sorted(glob.glob(img_path)):
@@ -42,6 +47,8 @@ def pred_using_tflite_model(model, img_path):
         predictions = tflite_interpreter.get_tensor(output_index[0]['index'])
         pred=predictions[0].argmax(axis=0)
         label = img_name.split("_")[0]
+        prediction.append(pred)
+        gt.append(int(label))
         result[img1] = pred  
         if int(label)!=pred:
             wrong_count+=1
@@ -50,12 +57,4 @@ def pred_using_tflite_model(model, img_path):
             correct_count+=1 
     accuracy = (len(glob.glob(img_path))-wrong_count)*100/len(glob.glob(img_path))
     return result,accuracy
-
-# if __name__ == '__main__':
-#         model = os.path.expanduser('~')+'/react-native-saral-sdk/ml_models/handwritten_digits/models/tflite_model/trained_resnet_model_v2_10.tflite'
-#         path = os.path.expanduser('~')+'/react-native-saral-sdk/ml_models/handwritten_digits/data/test/*'
-#         print(pred_using_tflite_model(model, path))
-#     model = tf.keras.models.load_model(os.path.expanduser('~')+'/react-native-saral-sdk/ml_models/handwritten_digits/models/pre-trained_model/trained_resnet_model_v2_10.h5')
-#     path = os.path.expanduser('~')+'/react-native-saral-sdk/ml_models/handwritten_digits/data/test/*.jpg'
-#     print(pred_using_h5_digit(model, path))
       
