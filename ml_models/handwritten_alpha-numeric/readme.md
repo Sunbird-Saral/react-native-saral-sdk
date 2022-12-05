@@ -7,7 +7,7 @@ Please find the handwritten alpha-numeric recognition asset details below.
 ## Dataset
 - The dataset has to be placed inside ``data/raw``  
 - It will consist of 37 folders (1 folder per class) in total (i.e 0-10: digit classes (noise class included) and 11-36: block letters)
-- In case more dataset needed, download from: [Link](https://drive.google.com/drive/folders/1pN6_j8BBoB9yacUNCXE37d6qKK6NtOpo?usp=share_link) and place it in the same folder structure as mentioned above
+- In case more dataset needed, download from: [Link](https://drive.google.com/drive/folders/1a08_cVWF_ZE_B6K_hUvWkms8Lo4S3ebT) and place it in the same folder structure as mentioned above
 
 ## Pre-trained Resnet model
 - The pre-trained Resnet model is placed inside ``models/`` 
