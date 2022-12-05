@@ -1,3 +1,4 @@
+#Note: Folder structrures are maintained as given below. Can be created if not present/ changed as per requirements
 # To save the training checkpoint at the end of training
 SAVE_MODEL=True
 
@@ -12,7 +13,7 @@ TF_LITE_SAVE_PATH="../models/tflite_model/an_recog_digit_tmp.tflite"
 
 # total number of epochs you want to train the model
 EPOCH=50
-BATCH_SIZE=128
+BATCH_SIZE=4
 
 # Path of pretrained Resnet model to finetune it on new batch of dataset
 PRETRAINED_WEIGHT_PATH='../models/pre-trained_model/trained_resnet_model_letter_digit_v0_24_epoch_basemodel.h5'

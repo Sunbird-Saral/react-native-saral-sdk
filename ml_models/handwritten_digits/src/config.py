@@ -1,3 +1,4 @@
+#Note: Folder structrures are maintained as given below. Can be created if not present/ changed as per requirements
 # To save the training checkpoint at the end of training
 SAVE_MODEL=True
 

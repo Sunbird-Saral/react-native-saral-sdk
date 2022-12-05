@@ -1,5 +1,6 @@
+#Note: Folder structrures are maintained as given below. Can be created if not present/ changed as per requirements
 # -- # -- # -- # -- for train_GAN.py -- # -- # -- # 
-#### Please configure paths as per your requirements #####
+
 # Image path to train the model with / To create the synthetic dataset of a specific class (E.g 7/ 8/ 9) 
 IMAGE_PATH="../data/raw/7/*"
 
