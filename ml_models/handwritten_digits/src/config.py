@@ -14,7 +14,7 @@ TF_LITE_SAVE_PATH="../models/tflite_model/hw_recog_digit_tmp.tflite"
 EPOCH=50
 
 # batch size of training data
-BATCH_SIZE=128
+BATCH_SIZE=4
 
 # Path of pretrained Resnet model to finetune it on new batch of dataset
 PRETRAINED_WEIGHT_PATH='../models/pre-trained_model/trained_resnet_model_v2_10.h5'
