@@ -3,7 +3,7 @@
 SAVE_MODEL=True
 
 # path to save the trained model
-SAVE_MODEL_PATH="../models/saved_model/new_model.h5"
+SAVE_MODEL_PATH="../models/saved_model/"
 
 # To convert .h5 (keras model) to a tflite model
 H5_MODEL_PATH="../models/saved_model/new_model.h5"
