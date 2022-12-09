@@ -20,6 +20,10 @@ Please find the handwritten digit recognition asset details below.
 ``
 $ python train.py 
 ``
+## To check training stats of model using TensorBoard
+- Execute ``$ tensorboard --logdir logs/`` on another terminal window
+- Switch to SCALAR tab to check-realtime performance 
+
 ## Keras to tflite model converter
 - Go to ``src/``
 - Run ``keras_to_tf_converter.py`` module to convert keras model to tflite model.
@@ -29,8 +33,8 @@ $ keras_to_tf_converter.py
 - Use ``config.py`` file to give the path of keras model and save path to save the tflite model
 
 ## Evaluation
-- Place test dataset inside ``data/test``
-- Inference images should be in the form 1_3.jpg, 9_3445.jpg, etc. (i.e classname_random digit.jpg)
+- Place test dataset inside ``data/test/``
+- It should contain 1 folder per class with images to infer upon (E.g ``data/test/1/0.png,1.png``)
 - Go to ``src/``
 - Use ``predict.ipynb`` file for inferencing. Get the ground truth image and it's prediction (as title of the image)
 
