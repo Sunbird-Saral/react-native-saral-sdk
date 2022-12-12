@@ -30,10 +30,13 @@ class BaseModel(object):
         log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
         tensorboard_callback = TensorBoard(log_dir=log_dir,histogram_freq=1, write_graph= True, update_freq='epoch')
 
-        # Save model callback
-        save_model_callback = ModelCheckpoint(filepath=config.SAVE_MODEL_PATH+"checkpoint_epoch{}.h5".format(epochs), 
-                                                                            save_best_only=config.SAVE_BEST_MODEL, save_weights_only= True, save_freq='epoch')
-
+        #Save model callback
+        if config.SAVE_BEST_MODEL == True:
+            save_model_callback = ModelCheckpoint(filepath=config.SAVE_MODEL_PATH+"checkpoint_best_model.h5", 
+                                                                            save_best_only=True, save_weights_only= True, save_freq='epoch')
+        else:
+            save_model_callback = ModelCheckpoint(filepath=config.SAVE_MODEL_PATH+"checkpoint_{epoch:02d}_{val_loss:.2f}.h5", 
+                                                                            save_weights_only= True, period=1,save_freq='epoch')
         hist = self.model.fit(x_train, y_train, epochs = epochs,
                               batch_size = batch_size,
                               validation_data = (x_val, y_val), callbacks= [self.callbacks, tensorboard_callback, save_model_callback])
@@ -55,8 +58,12 @@ class BaseModel(object):
         tensorboard_callback = TensorBoard(log_dir=log_dir,histogram_freq=1, write_graph= True, update_freq='epoch')
 
         # Save model callback
-        save_model_callback = ModelCheckpoint(filepath=config.SAVE_MODEL_PATH+"checkpoint_epoch{}.h5".format(epochs), 
-                                                                            save_best_only=config.SAVE_BEST_MODEL, save_weights_only= True, save_freq='epoch')
+        if config.SAVE_BEST_MODEL == True:
+            save_model_callback = ModelCheckpoint(filepath=config.SAVE_MODEL_PATH+"checkpoint_best_model.h5", 
+                                                                            save_best_only=True, save_weights_only= True, save_freq='epoch')
+        else:
+            save_model_callback = ModelCheckpoint(filepath=config.SAVE_MODEL_PATH+"checkpoint_{epoch:02d}_{val_loss:.2f}.h5", 
+                                                                            save_weights_only= True, period=1,save_freq='epoch')
 
         hist = self.model.fit_generator(train_datagen,
                                         callbacks = [self.callbacks, save_model_callback, tensorboard_callback],

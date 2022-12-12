@@ -24,7 +24,7 @@ BATCH_SIZE=4
 PRETRAINED_WEIGHT_PATH='../models/pre-trained_model/trained_resnet_model_letter_digit_v0_24_epoch_basemodel.h5'
 
 # training dataset path
-IMAGE_PATH="../data/raw/*/*.jpg"
+IMAGE_PATH="../data/raw/*/*"
 
 # size of the dataset to use for validation of the trained model
 TEST_DATA_SIZE=4
