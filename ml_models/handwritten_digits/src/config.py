@@ -21,7 +21,7 @@ EPOCH=10
 BATCH_SIZE=4
 
 # Path of pretrained Resnet model to finetune it on new batch of dataset
-PRETRAINED_WEIGHT_PATH='../models/pre-trained_model/trained_resnet_model_v2_10.h5'
+PRETRAINED_WEIGHT_PATH='../models/pre-trained_model/resnet_trained_model_digit_with_printed_v1_new_finetune_13_08_22_epoch_5.h5'
 
 # training dataset path
 IMAGE_PATH="../data/raw/*/*"
