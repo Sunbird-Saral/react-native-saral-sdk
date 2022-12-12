@@ -1,4 +1,10 @@
 from utils import get_train_generator, get_val_generator
+import sys
+sys.path.append('../../ml_models/handwritten_digits/src/models')
+sys.path.append('../../ml_models/handwritten_alpha-numeric/src/models')
+from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
+import datetime
+import config
 
 class BaseModel(object):
     def __init__(self, model, optimizer, callbacks = None):
@@ -19,10 +25,19 @@ class BaseModel(object):
     def fit(self, training_data, validation_data, epochs, batch_size):
         x_train, y_train = training_data
         x_val, y_val = validation_data
+        
+        # Tensorboard callback
+        log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        tensorboard_callback = TensorBoard(log_dir=log_dir,histogram_freq=1, write_graph= True, update_freq='epoch')
+
+        # Save model callback
+        save_model_callback = ModelCheckpoint(filepath=config.SAVE_MODEL_PATH+"checkpoint_epoch{}.h5".format(epochs), 
+                                                                            save_best_only=config.SAVE_BEST_MODEL, save_weights_only= True, save_freq='epoch')
 
         hist = self.model.fit(x_train, y_train, epochs = epochs,
                               batch_size = batch_size,
-                              validation_data = (x_val, y_val), callbacks = self.callbacks)
+                              validation_data = (x_val, y_val), callbacks= [self.callbacks, tensorboard_callback, save_model_callback])
+
         return hist
 
     def fit_generator(self, training_data, validation_data, epochs, batch_size):
@@ -34,8 +49,17 @@ class BaseModel(object):
                                                   batch_size = batch_size)
         val_datagen = get_val_generator(x_val, y_val,
                                               batch_size = batch_size)
+
+        # Tensorboard callback
+        log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        tensorboard_callback = TensorBoard(log_dir=log_dir,histogram_freq=1, write_graph= True, update_freq='epoch')
+
+        # Save model callback
+        save_model_callback = ModelCheckpoint(filepath=config.SAVE_MODEL_PATH+"checkpoint_epoch{}.h5".format(epochs), 
+                                                                            save_best_only=config.SAVE_BEST_MODEL, save_weights_only= True, save_freq='epoch')
+
         hist = self.model.fit_generator(train_datagen,
-                                        callbacks = self.callbacks,
+                                        callbacks = [self.callbacks, save_model_callback, tensorboard_callback],
                                         steps_per_epoch = x_train.shape[0] // batch_size,
                                         epochs = epochs, validation_data = val_datagen,
                                         validation_steps = x_val.shape[0] // batch_size)

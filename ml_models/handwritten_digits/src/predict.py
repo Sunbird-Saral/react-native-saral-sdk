@@ -11,13 +11,13 @@ def pred_using_h5_digit(model, path):
     wrong_count=0
     for img1 in sorted(glob.iglob(path)):
         img=cv2.imread(img1)
+        img=cv2.resize(img,(28,28))
         img= cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img = img.astype('float32') / 255.
         img=np.reshape(img,(1,28,28,1))
         res=model.predict(img)
         pred=res[0].argmax(axis=0)
-        ground = img1.split('/')[-1] 
-        ground_truth = ground.split('_')[0]
+        ground_truth = img1.split('/')[-2] 
         prediction.append(pred)
         gt.append(int(ground_truth))
         result[img1] = pred
@@ -36,7 +36,6 @@ def pred_using_tflite_model(model, img_path):
     result = {}
     wrong_count=0; correct_count=0
     for img1 in sorted(glob.glob(img_path)):
-        img_name= img1.split("/")[-1]
         img=cv2.imread(img1)
         img=cv2.resize(img,(28,28))
         img= cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -46,11 +45,11 @@ def pred_using_tflite_model(model, img_path):
         tflite_interpreter.invoke()
         predictions = tflite_interpreter.get_tensor(output_index[0]['index'])
         pred=predictions[0].argmax(axis=0)
-        label = img_name.split("_")[0]
+        ground_truth = img1.split('/')[-2]
         prediction.append(pred)
-        gt.append(int(label))
+        gt.append(int(ground_truth))
         result[img1] = pred  
-        if int(label)!=pred:
+        if int(ground_truth)!=pred:
             wrong_count+=1
             # result[img_name]={"ground":label,"prediction":pred}
         else:

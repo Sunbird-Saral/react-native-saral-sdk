@@ -2,7 +2,7 @@ import argparse
 import config
 import sys
 import os
-sys.path.insert(0,os.path.expanduser('~')+'/ml_models/common/')
+sys.path.insert(0,os.path.expanduser('~')+'/react-native-saral-sdk/ml_models/common/')
 from utils import load_mnist
 from resnet_model import ResNet164
 
