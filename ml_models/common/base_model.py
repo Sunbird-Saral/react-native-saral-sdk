@@ -32,7 +32,7 @@ class BaseModel(object):
 
         # Save model callback
         save_model_callback = ModelCheckpoint(filepath=config.SAVE_MODEL_PATH+"checkpoint_epoch{}.h5".format(epochs), 
-                                                                            save_weights_only= True, save_freq='epoch')
+                                                                            save_best_only=config.SAVE_BEST_MODEL, save_weights_only= True, save_freq='epoch')
 
         hist = self.model.fit(x_train, y_train, epochs = epochs,
                               batch_size = batch_size,
@@ -56,7 +56,7 @@ class BaseModel(object):
 
         # Save model callback
         save_model_callback = ModelCheckpoint(filepath=config.SAVE_MODEL_PATH+"checkpoint_epoch{}.h5".format(epochs), 
-                                                                            save_weights_only= True, save_freq='epoch')
+                                                                            save_best_only=config.SAVE_BEST_MODEL, save_weights_only= True, save_freq='epoch')
 
         hist = self.model.fit_generator(train_datagen,
                                         callbacks = [self.callbacks, save_model_callback, tensorboard_callback],
