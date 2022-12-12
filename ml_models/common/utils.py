@@ -70,8 +70,8 @@ def load_mnist():
     x_test = normalize_images(x_test)
     # y_train = np_utils.to_categorical(y_train) # encode one-hot vector
     # y_test = np_utils.to_categorical(y_test)
-    y_train = to_categorical(y_train) # encode one-hot vector
-    y_test = to_categorical(y_test)
+    y_train = to_categorical(y_train, num_classes=config.NO_OF_CLASS) # encode one-hot vector
+    y_test = to_categorical(y_test, num_classes= config.NO_OF_CLASS)
    
 
     num_of_test_data = config.TEST_DATA_SIZE
