@@ -5,6 +5,9 @@ SAVE_MODEL=True
 # path to save the trained model
 SAVE_MODEL_PATH="../models/saved_model/"
 
+# Save best model
+SAVE_BEST_MODEL = False
+
 # To convert .h5 (keras model) to a tflite model
 H5_MODEL_PATH="../models/saved_model/new_model.h5"
 
@@ -12,7 +15,7 @@ H5_MODEL_PATH="../models/saved_model/new_model.h5"
 TF_LITE_SAVE_PATH="../models/tflite_model/hw_recog_digit_tmp.tflite"
 
 # total number of epochs you want to train the model
-EPOCH=50
+EPOCH=10
 
 # batch size of training data
 BATCH_SIZE=4
