@@ -33,10 +33,10 @@ class BaseModel(object):
         #Save model callback
         if config.SAVE_BEST_MODEL == True:
             save_model_callback = ModelCheckpoint(filepath=config.SAVE_MODEL_PATH+"checkpoint_best_model.h5", 
-                                                                            save_best_only=True, save_weights_only= True, save_freq='epoch')
+                                                                            save_best_only=True, save_freq='epoch')
         else:
             save_model_callback = ModelCheckpoint(filepath=config.SAVE_MODEL_PATH+"checkpoint_{epoch:02d}_{val_loss:.2f}.h5", 
-                                                                            save_weights_only= True, period=1,save_freq='epoch')
+                                                                            period=1,save_freq='epoch')
         hist = self.model.fit(x_train, y_train, epochs = epochs,
                               batch_size = batch_size,
                               validation_data = (x_val, y_val), callbacks= [self.callbacks, tensorboard_callback, save_model_callback])
@@ -60,10 +60,10 @@ class BaseModel(object):
         # Save model callback
         if config.SAVE_BEST_MODEL == True:
             save_model_callback = ModelCheckpoint(filepath=config.SAVE_MODEL_PATH+"checkpoint_best_model.h5", 
-                                                                            save_best_only=True, save_weights_only= True, save_freq='epoch')
+                                                                            save_best_only=True, save_freq='epoch')
         else:
             save_model_callback = ModelCheckpoint(filepath=config.SAVE_MODEL_PATH+"checkpoint_{epoch:02d}_{val_loss:.2f}.h5", 
-                                                                            save_weights_only= True, period=1,save_freq='epoch')
+                                                                            period=1, save_freq='epoch')
 
         hist = self.model.fit_generator(train_datagen,
                                         callbacks = [self.callbacks, save_model_callback, tensorboard_callback],
