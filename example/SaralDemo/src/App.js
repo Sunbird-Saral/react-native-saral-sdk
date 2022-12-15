@@ -4,7 +4,6 @@ import SaralSDK from '../SaralSDK'
 import SaralSpecData from '../data/saral-physical-layout-representation-specs-example1.json'
 import DropDownMenu from '../DropDownMenu';
 import { guj_1s_12Q, guj_1s_34Q, guj_1s_5Q, Hindi_8s_13q_9D_omr, odisha_1s_20Q, up_20s_midday_meal, up_3s_30q_omr, up_4s_20q_omr, up_hindi_8s_13q_omr, up_multisubject_1s_10q, _1S30Q_non_academic } from '../RoisLayout';
-import ModalPopup from './component/Model';
 import { useDispatch, useSelector } from "react-redux";
 import { AllRoiData } from './redux/Reducers/RoidataReducer';
 export default function App({navigation}) {
@@ -13,14 +12,8 @@ export default function App({navigation}) {
   const [selectedRoi, setSelectedRoi] = useState(-1)
 
   const [selectedRoiLayout, setSelectedRoiLayout] = useState()
-  const [modalVisible, setModalVisible] = useState(false)
-  const [resultData, setResultData] = useState([])
-  const studentIdPrediction= resultData&& resultData.studentIdPrediction
-  const cellId = resultData && resultData.cellId
 
   const dispatch = useDispatch();
-  const roisData = useSelector(state => state.RoiSliceData.roiData)
-  // console.log('resultData????',roisData);
   const requestCameraPermission = async () => {
 
     try {
@@ -44,7 +37,6 @@ export default function App({navigation}) {
           SaralSDK.startCamera(JSON.stringify(selectedRoiLayout), pageNumber).then(res => {
             let roisData = JSON.parse(res);
             let cells = roisData.layout.cells;
-            // console.log('roisData??????????',JSON.stringify(cells));
             consolidatePrediction(cells, roisData)
           }).catch((code, message) => {
             console.log("message", message)
@@ -74,7 +66,6 @@ export default function App({navigation}) {
         if (cells[i].rois[j].hasOwnProperty("result")) {
           marks = marks + cells[i].rois[j].result.prediction,
             predictionConfidenceArray.push(cells[i].rois[j].result.confidence)
-          // roisData.layout.cells[i].predictionConfidence = cells[i].rois[j].result.confidence
         } else {
           let resultProperty = {
             "prediction": "0",
@@ -88,13 +79,9 @@ export default function App({navigation}) {
       roisData.layout.cells[i].predictionConfidence = predictionConfidenceArray
       if (roisData.layout.cells[i].format.value === neglectData[0] || roisData.layout.cells[i].format.name.length - 3 == neglectData[0].length) {
         roisData.layout.cells[i].studentIdPrediction = marks  
-        // console.log("roisData>>>>",roisData.layout.cells[i]);
-        // setResultData(roisData.layout.cells[i])
       } else {
         roisData.layout.cells[i].predictedMarks = marks
-        // setResultData(roisData.layout.cells[i])
       }
-      // console.log('roisData>>>>>>>',roisData);
       dispatch(AllRoiData(roisData))
       navigation.navigate('ScanDetailScreen')
     }
@@ -167,38 +154,6 @@ export default function App({navigation}) {
         
 
       }
-      {resultData.cellId ? 
-      <View style={{marginTop:30}}>
-        <Button
-          title="Scan Result"
-          color="#841584"
-          onPress={() => setModalVisible(!modalVisible)}
-          style={{ marginTop: 40 }}
-        />
-        </View>:null }
-        {resultData.cellId ? 
-        <ModalPopup
-                visible={!modalVisible}
-                onRequestClose={() => setModalVisible(!modalVisible)}
-                onPress={() => setModalVisible(!modalVisible)}
-                btnText={'close'.toUpperCase()}
-                // themeColor1={themeColor1}
-                // borderCutomStyle={[styles.borderStyle, { borderColor: themeColor1 ? themeColor1 : AppTheme.GREEN }]}
-                data={
-                    <View style={{ }}>
-                        <Text style={{width:300}}>{`cellId : ${cellId} `}</Text>
-                        <Text style={{width:300}}>{`studentIdPrediction : ${studentIdPrediction} `}</Text>
-                        <View>
-                          {
-                            resultData&&resultData.rois&&resultData.rois.map((item)=>{
-                              return(
-                              <Text style={{width:300}}>{`${JSON.stringify(item)} `}</Text>
-                              )
-                            })
-                          }
-                        </View>
-                    </View>}
-            />: null }
     </View>
 
     

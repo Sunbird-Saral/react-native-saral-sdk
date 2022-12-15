@@ -1,54 +1,32 @@
 import React, { useState, useEffect } from 'react'
-import { Text, View,ScrollView, Dimensions, StyleSheet } from "react-native";
+import { Text, View, ScrollView, Dimensions, StyleSheet, TextInput } from "react-native";
 import MarksHeaderTable from './component/MarkHeaderTable';
 import { CELL_OMR, extractionMethod, multipleStudent, neglectData } from './component/CommonUtils';
 import ButtonComponent from './component/ButtonComponent';
 import { useDispatch, useSelector } from "react-redux";
-import { AllRoiData } from './redux/Reducers/RoidataReducer';
+
 const { width, height } = Dimensions.get('window')
 const ScanDetailScreen = ({ route, navigation }) => {
-    const [summary, setSummary] = useState(false)
     const [newArrayValue, setNewArrayValue] = useState([])
     const [btnName, setBtnName] = useState('Cancel')
-    const [obtainedMarks, setObtainedMarks] = useState(0)
-    const [isLoading, setIsLoading] = useState(false)
     const [studentId, setStudentID] = useState();
-    const [stdErr, setStdErr] = useState("");
-    const [edit, setEditValue] = useState(true)
-    const [studentValid, setStudentValid] = useState()
-    const [studentData, setStudentDATA] = useState([])
     const [maxMarksTotal, setMaxMarksTotal] = useState(0)
     const [sumOfObtainedMarks, setSummOfObtainedMarks] = useState(0)
     const [totalMarkSecured, setTotalMarkSecured] = useState()
-    const [obtnmarkErr, setObtnMarkErr] = useState(false)
-    const [maxmarkErr, setMaxMarkErr] = useState(false)
-    const [disable, setDisabled] = useState(false)
     const [isMultipleStudent, setIsmultipleStudent] = useState(false)
-
     const [stdRollArray, setStdRollArray] = useState([])
     const [structureList, setStructureList] = useState([])
     const [currentIndex, setCurrentIndex] = useState(0)
-    const [valid, setValid] = useState(false);
-    const [isStudentValid, setIsStudentValid] = useState(false);
     const [multiPageStdId, setMultipageStdId] = useState();
-
     const [nextBtn, setNextBtn] = useState('Close')
-    const [checkStdRollDuplicate, setCheckStdRollDuplicate] = useState([])
-    const [stdAddRollData, setStdAddRollData] = useState([])
-    const [toggleCheckBox, setToggleCheckBox] = useState(false)
-    const [logmessage, setLogmessage] = useState()
     const [multiPage, setMultiPage] = useState(0)
-    const [isModalVisible, setIsModalVisible] = useState(false)
-    const [tagData, setTagData] = useState([])
-    const [questionIdData, setQuestionIdData] = useState()
-    const [omrResultErr, setOmrResult] = useState()
     const [isOmrOptions, setOmrOptions] = useState(false)
     const [isAlphaNumeric, setIsAlphaNumeric] = useState(false)
     const [filterData, setFilterData] = useState({ data: [], len: 0 })
 
     //  const roisData = route.params.roisData
-     const roisData = useSelector(state => state.RoiSliceData.roiData)
-    // console.log('roisData>>>',roisData);
+    const roisData = useSelector(state => state.RoiSliceData.roiData)
+    console.log('roisData>>>', studentId);
     useEffect(() => {
         // console.log('roisData>>>',roisData.layout);
         let checkRoLLNumberExist = roisData.layout.hasOwnProperty("identifierPrefix") ? roisData.layout.identifierPrefix : roisData.layout.cells[0].format.name.replace(/[0-9]/g, '') == multipleStudent[0] ? multipleStudent[0] : neglectData[0]
@@ -172,9 +150,6 @@ const ScanDetailScreen = ({ route, navigation }) => {
                     return true
                 }
             })
-            //extract_MAX_OBTAINED_MARKS return all question data except max marks and obtained marks
-
-            //DO summ of all result from extract_MAX_OBTAINED_MARKS except max marks and obtained marks
             let maximum = 0;
             let sum = extract_MAX_OBTAINED_MARKS.forEach((e) => {
                 maximum = parseInt(maximum) + parseInt(e.consolidatedPrediction)
@@ -196,7 +171,6 @@ const ScanDetailScreen = ({ route, navigation }) => {
             }
         }
     }
-
 
     const callMultipleStudentSheetData = (checkIsStudentMultipleSingle) => {
         let marTemp = []
@@ -234,244 +208,172 @@ const ScanDetailScreen = ({ route, navigation }) => {
             setNewArrayValue(removeZeroRollStd[0].data)
             setStructureList(removeZeroRollStd)
         } else {
-             goToMyScanScreen()
-            // setTimeout(() => {
-            //     // callCustomModal(Strings.message_text, Strings.student_id_should_not_blank, false);
-            // }, 1000);
+            goToMyScanScreen()
         }
     }
+
     const goToMyScanScreen = () => {
         navigation.navigate("App")
     }
 
     const renderSRNo = (element, index) => {
         return `${index + 1}`
-}
-
-
-const lengthAccordingSheet = (element) => {
-    if (isMultipleStudent) {
-        return 2
-    } else if (element.format.name === neglectData[2] || element.format.name === neglectData[3]) {
-        return 4
-    } else {
-        return 100
     }
-}
 
-const handleTextChange = (text, index, array, value) => {
 
-    if (isMultipleStudent) {
-        let len = text.length
-        setDisabled(len == 0 ? true : false)
-        if (text > 1) {
-            setValid(true)
-        } else {
-            setValid(false)
-        }
+    const goBackFrame = () => {
+        if (currentIndex - 1 >= 0) {
+            let std = structureList[currentIndex - 1].RollNo
+            let toggle = structureList[currentIndex - 1].isNotAbleToSave
 
-        let newArray = JSON.parse(JSON.stringify(array))
-        newArray[index].consolidatedPrediction = text.length>0&& text > 1 ? 0 : text
-        setNewArrayValue(newArray)
-
-        roisData.layout.cells.forEach(element => {
-
-            if (element.cellId == value.cellId) {
-                structureList.forEach(Datas => {
-                    //this'll add into OCRLocal
-                    element.consolidatedPrediction = text.length<0&&text < 1 ? 0 : text
-                    //this'll add in  structurelist
-                    Datas.data.forEach((el, index) => {
-                        if (el.cellId === value.cellId) {
-                            el.consolidatedPrediction = text.length>0&&text > 1 ? 0 : text
-                        }
-                    });
-
-                });
-            }
-        });
-    } else {
-        let len = text.length
-        setDisabled(len == 0 ? true : false)
-        let newArray = JSON.parse(JSON.stringify(array))
-        newArray[index].consolidatedPrediction = isMultipleStudent ? text > 1 ? 0 : text : text
-        setNewArrayValue(newArray)
-
-        roisData.layout.cells.forEach(element => {
-            if (element.cellId == value.cellId) {
-                element.consolidatedPrediction = text
-
-            }
-        });
-
-        newArray.map((e) => {
-            if (e.format.name == neglectData[3]) {
-                setMaxMarksTotal(e.consolidatedPrediction)
-            }
-            if (e.format.name == neglectData[2]) {
-                setTotalMarkSecured(e.consolidatedPrediction)
-            }
-        })
-    }
-}
-
-const goBackFrame = () => {
-    if (currentIndex - 1 >= 0) {
-        let std = structureList[currentIndex - 1].RollNo
-        let toggle = structureList[currentIndex - 1].isNotAbleToSave
-        const indexStd = stdAddRollData.indexOf(std);
-
-        if (indexStd > -1 & !toggle) {
-            stdAddRollData.splice(indexStd, 1);
-        }
-        if (!toggle) {
-            setStdAddRollData(stdAddRollData)
-        }
-        setCheckStdRollDuplicate(checkStdRollDuplicate)
-        setToggleCheckBox(toggle)
-        setNewArrayValue(structureList[currentIndex - 1].data)
-        setStudentID(structureList[currentIndex - 1].RollNo)
-        setCurrentIndex(currentIndex - 1)
-        if (currentIndex == 1) {
-            setBtnName('cancel')
-        }
-        setNextBtn('Next')
-    }
-    else {
-        onBackButtonClick()
-    }
-}
-
-const goBackPage = () => {
-    if (currentIndex - 1 >= 1) {
-            setNextBtn(`Scan Page#${currentIndex}`)
-            const elements = neglectData;
-            let checkIdentifierExist = roisData.layout.hasOwnProperty("identifierPrefix") ? roisData.layout.identifierPrefix : roisData.layout.cells[0].format.name.replace(/[0-9]/g, '') == multipleStudent[0] ? multipleStudent[0] : neglectData[0]
-            let filterDataAccordingPage = roisData.layout.cells.filter((element) => {
-                if (element.format.name == checkIdentifierExist || element.format.name == elements[1] || element.format.name == elements[4] || element.page != currentIndex - 1) {
-                    return false
-                }
-                else {
-                    return true
-                }
-            })
-            setNewArrayValue(filterDataAccordingPage)
+            setNewArrayValue(structureList[currentIndex - 1].data)
+            setStudentID(structureList[currentIndex - 1].RollNo)
             setCurrentIndex(currentIndex - 1)
-            if (currentIndex - 1 == 1) {
-                setBtnName(Strings.cancel_text)
+            if (currentIndex == 1) {
+                setBtnName('cancel')
             }
+            setNextBtn('Next')
         }
-    // } 
-    else {
-        onBackButtonClick()
+        else {
+            onBackButtonClick()
+        }
     }
-}
-const onBackButtonClick = () => {
-    navigation.navigate("App")
-}
 
-const goNextFrame = () => {  
+    const goBackPage = () => {
+
+    }
+    const onBackButtonClick = () => {
+        navigation.navigate("App")
+    }
+
+    const goNextFrame = () => {
         if (currentIndex + 1 <= stdRollArray.length - 1) {
             setNewArrayValue(structureList[currentIndex + 1].data)
             setStudentID(structureList[currentIndex + 1].RollNo)
             setCurrentIndex(currentIndex + 1)
             setBtnName('Back')
-            if (currentIndex + 1 === stdRollArray.length - 1 ) {
-                console.log('currentIndex + 1 == stdRollArray.length - ',currentIndex + 1 == stdRollArray.length - 1);
+            if (currentIndex + 1 === stdRollArray.length - 1) {
                 setNextBtn('Close')
-                goToMyScanScreen()
             }
-        } 
-        
-}
+        } else {
+            goToMyScanScreen()
+        }
+
+    }
 
 
-const onSubmitClick = async () => {
+    const onSubmitClick = async () => {
         goToMyScanScreen()
-}
+    }
 
-const goNextPage = () => {
-    onSubmitClick()
-}
+    const goNextPage = () => {
+        onSubmitClick()
+    }
+
 
     return (
-        <View style={{flex:1}}>
-               <ScrollView  showsVerticalScrollIndicator={false}
-                    bounces={false}
-                    keyboardShouldPersistTaps={'handled'}>
-            <View style={{ flexDirection: 'row', width: width,justifyContent:'center' }}>
-                <MarksHeaderTable
-                    customRowStyle={{width:width/3.2}}
-                    rowTitle={'Sr No'}
-                    //   rowBorderColor={AppTheme.TAB_BORDER}
-                    editable={false}
-                />
-                <MarksHeaderTable
-                    customRowStyle={{width:width/3.2}}
-                    rowTitle={'Question'}
-                    //   rowBorderColor={AppTheme.TAB_BORDER}
-                    editable={false}
-                />
-                <MarksHeaderTable
-                    customRowStyle={{width:width/3.2}}
-                    rowTitle={'Marks'}
-                    //   rowBorderColor={AppTheme.TAB_BORDER}
-                    editable={false}
-                />
-            </View>
-            {
-                newArrayValue.map((element, index) => {
-                    return (
-                        <View element={element} key={index} style={{ flexDirection: 'row', width: width,justifyContent:'center' }}>
+        <View style={{ flex: 1 }}>
+            <ScrollView showsVerticalScrollIndicator={false}
+                bounces={false}
+                keyboardShouldPersistTaps={'handled'}>
 
-                            <MarksHeaderTable
-                                customRowStyle={{width:width/3.2 }}
-                                rowTitle={renderSRNo(element, index)}
-                                editable={false}
-                                keyboardType={'number-pad'}
-                            />
-                            <MarksHeaderTable
-                                customRowStyle={{width:width/3.2 }}
-                                rowTitle={element.format.value}
-                                editable={false}
-                                keyboardType={'number-pad'}
-                            />
-                            <MarksHeaderTable
-                                customRowStyle={{ width:width/3.2}}
-                                rowTitle={element.consolidatedPrediction}
-                                editable={true}
-                                keyboardType={element.hasOwnProperty("omrOptions") ? 'name' : 'name'}
-                                maxLength={lengthAccordingSheet(element)}
-                                onChangeText={(text) => {
-                                    handleTextChange(text.trim(), index, newArrayValue, element)
-                                }}
-                                
-                            />
-                            
-                        
+                <View style={styles.deatilsViewContainer}>
+                    <View style={styles.detailsSubContainerStyle}>
+                        <View style={styles.headerLabelViewStyle}>
+                            <Text style={styles.labelTextStyle}>{"ID : "}</Text>
                         </View>
-                    )
-                    // }
-                })
-            }
+                        <TextInput
+                            style={styles.inputStyle}
+                            onChangeText={(text) => {
+                                setStudentID(text)
+                                if (currentIndex == 1 && multiPage > 0) {
+                                    setMultipageStdId(text)
+                                }
+                            }}
+                            value={studentId}
+                            editable={false}
+
+                        />
+                    </View>
+                    {
+                        isMultipleStudent
+                            ?
+                            <Text style={styles.nameTextStyle}>{'Record No' + ': ' + (currentIndex + 1)}</Text>
+                            :
+                            roisData.layout.pages > 0
+                                ?
+                                <Text style={styles.nameTextStyle}>{'Record No' + ': ' + (currentIndex)}</Text>
+                                :
+                                <Text style={styles.nameTextStyle}>{'Record' + ': ' + (currentIndex + 1)}</Text>
+                    }
+
+
+                </View>
+                <View style={{ flexDirection: 'row', width: width, justifyContent: 'center' }}>
+                    <MarksHeaderTable
+                        customRowStyle={{ width: width / 3.2 }}
+                        rowTitle={'Sr No'}
+                        editable={false}
+                    />
+                    <MarksHeaderTable
+                        customRowStyle={{ width: width / 3.2 }}
+                        rowTitle={'Question'}
+                        editable={false}
+                    />
+                    <MarksHeaderTable
+                        customRowStyle={{ width: width / 3.2 }}
+                        rowTitle={'Marks'}
+                        editable={false}
+                    />
+                </View>
+                {
+                    newArrayValue.map((element, index) => {
+                        return (
+                            <View element={element} key={index} style={{ flexDirection: 'row', width: width, justifyContent: 'center' }}>
+
+                                <MarksHeaderTable
+                                    customRowStyle={{ width: width / 3.2 }}
+                                    rowTitle={renderSRNo(element, index)}
+                                    editable={false}
+                                    keyboardType={'number-pad'}
+                                />
+                                <MarksHeaderTable
+                                    customRowStyle={{ width: width / 3.2 }}
+                                    rowTitle={element.format.value}
+                                    editable={false}
+                                    keyboardType={'number-pad'}
+                                />
+                                <MarksHeaderTable
+                                    customRowStyle={{ width: width / 3.2 }}
+                                    rowTitle={element.consolidatedPrediction}
+                                    editable={false}
+                                    keyboardType={element.hasOwnProperty("omrOptions") ? 'name' : 'name'}
+                                />
+
+
+                            </View>
+                        )
+                        // }
+                    })
+                }
                 <View style={[styles.viewnxtBtnStyle1, { paddingTop: '7%' }]}>
-                                                <ButtonComponent
-                                                    customBtnStyle={[styles.nxtBtnStyle1,{ marginTop: '5%' }]}
-                                                    btnText={btnName.toUpperCase()}
-                                                    onPress={() => isMultipleStudent ? goBackFrame() : multiPage > 0 ? goBackPage() : onBackButtonClick()}
-                                                />
-                                                <ButtonComponent
-                                                    customBtnStyle={[styles.nxtBtnStyle1,{ marginTop: '5%' }]}
-                                                    btnText={nextBtn.toUpperCase()}
-                                                    onPress={() => isMultipleStudent ? goNextFrame() : multiPage > 0 ? goNextPage() : onSubmitClick()}
-                                                />
-                                            </View>
+                    <ButtonComponent
+                        customBtnStyle={[styles.nxtBtnStyle1, { marginTop: '5%' }]}
+                        btnText={btnName.toUpperCase()}
+                        onPress={() => isMultipleStudent ? goBackFrame() : multiPage > 0 ? goBackPage() : onBackButtonClick()}
+                    />
+                    <ButtonComponent
+                        customBtnStyle={[styles.nxtBtnStyle1, { marginTop: '5%' }]}
+                        btnText={nextBtn.toUpperCase()}
+                        onPress={() => isMultipleStudent ? goNextFrame() : multiPage > 0 ? goNextPage() : onSubmitClick()}
+                    />
+                </View>
             </ScrollView>
         </View>
     )
 }
 
-const styles =StyleSheet.create({
+const styles = StyleSheet.create({
     viewnxtBtnStyle1: {
         flexDirection: 'row',
         justifyContent: 'center',
@@ -483,5 +385,31 @@ const styles =StyleSheet.create({
         marginBottom: 20,
         borderRadius: 10
     },
+    nameTextStyle: {
+        lineHeight: 25,
+        fontSize: 18,
+        fontWeight: '500',
+        color: '#000',
+        letterSpacing: 1,
+        marginLeft: 10
+    },
+    inputStyle: {
+        padding: 0,
+        color: "#000",
+    },
+    headerLabelViewStyle: {
+        justifyContent: 'flex-start',
+    },
+    labelTextStyle: {
+        fontSize: 18,
+        color: "#111",
+        fontWeight: '700',
+        letterSpacing: 1,
+        lineHeight: 35,
+    },
+    detailsSubContainerStyle: {
+        flexDirection: 'row',
+        marginHorizontal: 10
+    }
 })
 export default ScanDetailScreen
