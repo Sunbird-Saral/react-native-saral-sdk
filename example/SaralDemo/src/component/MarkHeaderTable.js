@@ -11,6 +11,7 @@ const MarksHeaderTable = ({
     maxLength,
     onBlur,
     isBlur=false
+    
 }) => {
      return (
         <View style={[styles.container, customRowStyle, { borderColor: rowBorderColor }]}>
