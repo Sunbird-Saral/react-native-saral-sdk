@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button, PermissionsAndroid, Alert } from 'react-native';
-import SaralSDK from './SaralSDK'
-import SaralSpecData from './data/saral-physical-layout-representation-specs-example1.json'
-import DropDownMenu from './DropDownMenu';
-import { guj_1s_12Q, guj_1s_34Q, guj_1s_5Q, Hindi_8s_13q_9D_omr, odisha_1s_20Q, up_20s_midday_meal, up_3s_30q_omr, up_4s_20q_omr, up_hindi_8s_13q_omr, up_multisubject_1s_10q, _1S30Q_non_academic } from './RoisLayout';
-
-export default function App() {
+import SaralSDK from '../SaralSDK'
+import SaralSpecData from '../data/saral-physical-layout-representation-specs-example1.json'
+import DropDownMenu from '../DropDownMenu';
+import { guj_1s_12Q, guj_1s_34Q, guj_1s_5Q, Hindi_8s_13q_9D_omr, odisha_1s_20Q, up_20s_midday_meal, up_3s_30q_omr, up_4s_20q_omr, up_hindi_8s_13q_omr, up_multisubject_1s_10q, _1S30Q_non_academic } from '../RoisLayout';
+import { useDispatch, useSelector } from "react-redux";
+import { AllRoiData } from './redux/Reducers/RoidataReducer';
+export default function App({navigation}) {
 
   const [roiIndex, setRoiIndex] = useState(-1)
   const [selectedRoi, setSelectedRoi] = useState(-1)
 
   const [selectedRoiLayout, setSelectedRoiLayout] = useState()
 
+  const dispatch = useDispatch();
   const requestCameraPermission = async () => {
 
     try {
@@ -64,7 +66,6 @@ export default function App() {
         if (cells[i].rois[j].hasOwnProperty("result")) {
           marks = marks + cells[i].rois[j].result.prediction,
             predictionConfidenceArray.push(cells[i].rois[j].result.confidence)
-          // roisData.layout.cells[i].predictionConfidence = cells[i].rois[j].result.confidence
         } else {
           let resultProperty = {
             "prediction": "0",
@@ -77,14 +78,15 @@ export default function App() {
       }
       roisData.layout.cells[i].predictionConfidence = predictionConfidenceArray
       if (roisData.layout.cells[i].format.value === neglectData[0] || roisData.layout.cells[i].format.name.length - 3 == neglectData[0].length) {
-        roisData.layout.cells[i].studentIdPrediction = marks
+        roisData.layout.cells[i].studentIdPrediction = marks  
       } else {
         roisData.layout.cells[i].predictedMarks = marks
       }
-
-
+      dispatch(AllRoiData(roisData))
+      navigation.navigate('ScanDetailScreen')
     }
-    console.log("roisData",roisData);
+   
+   
   }
 
   const roiDataList = ["Guj_1s_5Q", "Guj_1s_12Q", "Guj_1s_34Q", "Odisha_1s_20Q", "Up_4s_20q_omr", "Up_3s_30q_omr", "Up_multisubject_1s_10q", "Up_hindi_8s_13q_omr", "Up_20s_midday_meal","Non-Academic","Hindi_8s_13q_9D_omr"]
@@ -146,12 +148,15 @@ export default function App() {
         <Button
           title="Click to invoke your native module!"
           color="#841584"
-          onPress={requestCameraPermission}
+          onPress={requestCameraPermission }
           style={{ marginTop: 20 }}
         />
+        
 
       }
     </View>
+
+    
   );
 }
 
