@@ -49,21 +49,20 @@ def load_mnist():
     for i in sorted(glob.glob(config.IMAGE_PATH)):
         img = cv2.imread(i)
         img= cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
         val = int(i.split("/")[-2])
         train.append(img)
         label.append(val)
-    data = list(zip(train, label)) 	
+    data = list(zip(train, label))	
     random.shuffle(data)
 
     train, label = zip(*data)
     train=np.asarray(train)
     label=np.asarray(label)
-    x_train=train[0:int(len(train)*0.90)]
-    y_train=label[0:int(len(label)*0.90)]
-    x_test=train[int(len(train)*0.90):]
-    y_test=label[int(len(label)*0.90):]
-    
+    x_train=train[0:int(len(train)*0.80)]
+    y_train=label[0:int(len(label)*0.80)]
+    x_test=train[int(len(train)*0.80):]
+    y_test=label[int(len(label)*0.80):]
+
     x_train = x_train.reshape(-1, 28, 28, 1)
     x_test = x_test.reshape(-1, 28, 28, 1)
     x_train = normalize_images(x_train)

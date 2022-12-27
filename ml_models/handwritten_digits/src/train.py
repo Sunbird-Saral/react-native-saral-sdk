@@ -61,7 +61,7 @@ def get_argument_parser(model_name):
 
 def train(model, model_name):
     # load all arguments
-    args = get_argument_parser(model_name)
+    # args = get_argument_parser(model_name)
 
     training_data, validation_data, test_data = load_mnist()
     print(f'[data loaded]')
@@ -76,19 +76,32 @@ def train(model, model_name):
         #print(f'[model image saved as {args.path_for_image}]')
 
     # load pretrained weights
+    # if config.FINE_TUNE:
+    #     model.load_weights(args.path_for_weights)
+    #     print(f'[weights loaded from {args.path_for_weights}]')
     if config.FINE_TUNE:
-        model.load_weights(args.path_for_weights)
-        print(f'[weights loaded from {args.path_for_weights}]')
+        model.load_weights(config.PRETRAINED_WEIGHT_PATH)
+        print(f'[weights loaded from {config.PRETRAINED_WEIGHT_PATH}]')
 
     # train the model
+    # hist = None
+    # if config.DATA_AUGMENTATION:
+    #     hist = model.fit_generator(training_data, validation_data,
+    #                                epochs = args.epochs, batch_size = args.batch_size)
+    #     print('[trained with augmented images]')
+    # else:
+    #     hist = model.fit(training_data, validation_data,
+    #                         epochs = args.epochs, batch_size = args.batch_size)
+    #     print('[trained without augmented images]')
+    
     hist = None
     if config.DATA_AUGMENTATION:
         hist = model.fit_generator(training_data, validation_data,
-                                   epochs = args.epochs, batch_size = args.batch_size)
+                                   epochs = config.EPOCH, batch_size = config.BATCH_SIZE)
         print('[trained with augmented images]')
     else:
         hist = model.fit(training_data, validation_data,
-                            epochs = args.epochs, batch_size = args.batch_size)
+                            epochs = config.EPOCH, batch_size = config.BATCH_SIZE)
         print('[trained without augmented images]')
 
     # save the training progress to an image file
@@ -102,7 +115,7 @@ def train(model, model_name):
         print(f'[Model and trained weights saved in {config.SAVE_MODEL_PATH}]')
 
     # evaluate the model with the test dataset
-    loss_and_metrics = model.evaluate(test_data, batch_size = args.batch_size)
+    loss_and_metrics = model.evaluate(test_data, batch_size = config.BATCH_SIZE)
     print('[Evaluation on the test dataset]\n', loss_and_metrics, '\n')
 
 def main():
