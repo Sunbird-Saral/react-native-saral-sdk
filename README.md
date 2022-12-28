@@ -13,7 +13,7 @@ npx react-native init SaralDemo
 ```
 This should give you a functional starter application. You can try running the android application by simple command
 ```
-npx react-native run-android
+react native run android
 ```
 
 ## Wiring the SaralSDK
