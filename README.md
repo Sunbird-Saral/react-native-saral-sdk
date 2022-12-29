@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
 
 **With this your RN application is ready to launch and start layout scanning.**
 
-# After scanning, the scan result screen will open, in which the information according to the layout type will be visible.
+**After scanning, the scan result screen will open, in which the information according to the layout type will be visible.**
 
 ![Screenshot_2022-12-28-12-58-12-00_cb652d2d4f4e6c9174df1f4305cd99c2](https://user-images.githubusercontent.com/91952702/209901827-5061ecfc-64ce-4dbe-8652-33f255592239.jpg)
 ![Screenshot_2022-12-28-12-58-33-63_cb652d2d4f4e6c9174df1f4305cd99c2](https://user-images.githubusercontent.com/91952702/209901840-d48f6b03-cb11-40c0-b7fd-5a9ec9087526.jpg)
