@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Button, PermissionsAndroid, Alert } from 'react
 import SaralSDK from '../SaralSDK'
 import SaralSpecData from '../data/saral-physical-layout-representation-specs-example1.json'
 import DropDownMenu from '../DropDownMenu';
-import { guj_1s_12Q, guj_1s_34Q, guj_1s_5Q, Hindi_8s_13q_9D_omr, odisha_1s_20Q, up_20s_midday_meal, up_3s_30q_omr, up_4s_20q_omr, up_hindi_8s_13q_omr, up_multisubject_1s_10q, _1S30Q_non_academic ,Guj_1s_15Q} from '../RoisLayout';
+import { guj_1s_12Q, guj_1s_34Q, guj_1s_5Q, Hindi_8s_13q_9D_omr, odisha_1s_20Q, up_20s_midday_meal, up_3s_30q_omr, up_4s_20q_omr, up_hindi_8s_13q_omr, up_multisubject_1s_10q, _1S30Q_non_academic ,Guj_1s_15Q, aln_personal_details} from '../RoisLayout';
 import { useDispatch, useSelector } from "react-redux";
 import { AllRoiData } from './redux/Reducers/RoidataReducer';
 import { CELL_OMR, extractionMethod, multipleStudent, neglectData } from './component/CommonUtils';
@@ -105,7 +105,7 @@ export default function App({navigation}) {
 }
   
 
-  const roiDataList = ["Guj_1s_5Q", "Guj_1s_12Q", "Guj_1s_34Q", "Odisha_1s_20Q", "Up_4s_20q_omr", "Up_3s_30q_omr", "Up_multisubject_1s_10q", "Up_hindi_8s_13q_omr", "Up_20s_midday_meal","Non-Academic","Hindi_8s_13q_9D_omr","Guj_1s_15Q"]
+  const roiDataList = ["Guj_1s_5Q", "Guj_1s_12Q", "Guj_1s_34Q", "Odisha_1s_20Q", "Up_4s_20q_omr", "Up_3s_30q_omr", "Up_multisubject_1s_10q", "Up_hindi_8s_13q_omr", "Up_20s_midday_meal","Non-Academic","Hindi_8s_13q_9D_omr","Guj_1s_15Q","aln_personal_details"]
 
   const onDropDownSelect = (idx, value) => {
     if (value == "Guj_1s_5Q") {
@@ -143,6 +143,9 @@ export default function App({navigation}) {
     }
     else if (value == "Hindi_8s_13q_9D_omr") {
       setSelectedRoiLayout(Hindi_8s_13q_9D_omr)
+    }
+    else if (value == "aln_personal_details") {
+      setSelectedRoiLayout(aln_personal_details)
     }
 
     setRoiIndex(idx)
