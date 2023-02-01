@@ -9,7 +9,7 @@ dataset used: Existing dataset + NIST misclassifications (hsf_0 subset of each c
 Handwritten Alphanumeric model information - iteration 2
 --------------------------------------------------------
 latest model:saral_hwdaln_model.tflite
-trained for: 34 epochs
-trained upon: resnet_trained_model_alphanumeric_with_printed_v1_new_finetune_13_08_22_epoch_23.h5 (first iteration) and checkpoint_17_0.16.h5 (second iteration)
+trained for: 25 epochs
+trained upon: resnet_trained_model_alphanumeric_with_printed_v1_new_finetune_13_08_22_epoch_23.h5 (first iteration) and checkpoint_17_0.16.h5 (second iteration) and checkpoint_04_0.03.h5 (third iteration)
 augmentations used: Yes
-dataset used: Existing dataset + NIST misclassifications (hsf_0 and hsf_1 subset of each class)
+dataset used: Existing dataset + production dataset created manually 
