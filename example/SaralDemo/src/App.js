@@ -38,8 +38,19 @@ export default function App({navigation}) {
         if (roiIndex != -1) {
           SaralSDK.startCamera(JSON.stringify(jsonRoiData), pageNumber).then(res => {
             let roisData = JSON.parse(res);
-            let cells = roisData.layout.cells;
-            consolidatePrediction(cells, roisData)
+
+            if (roisData.hasOwnProperty("hwDigitModel") && roisData.hwDigitModel) {
+              this.callCustomModal(Strings.message_text, "Digit model is not availaible", false);
+
+          } else if (roisData.hasOwnProperty("blockLetterModel") && roisData.blockLetterModel) {
+              this.callCustomModal(Strings.message_text, "Alpha numeric model is not availaible", false);
+
+          } else {
+              let cells = roisData.layout.cells;
+              this.consolidatePrediction(cells, roisData)
+          }
+
+
           }).catch((code, message) => {
             console.log("message", message)
             console.log("message", code)
