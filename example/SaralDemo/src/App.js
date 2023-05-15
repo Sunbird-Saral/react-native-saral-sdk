@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Button, PermissionsAndroid, Alert } from 'react-native';
+import { StyleSheet, Text, View, Button, PermissionsAndroid, Alert, ToastAndroid } from 'react-native';
 import SaralSDK from '../SaralSDK'
 import SaralSpecData from '../data/saral-physical-layout-representation-specs-example1.json'
 import DropDownMenu from '../DropDownMenu';
@@ -40,15 +40,14 @@ export default function App({navigation}) {
             let roisData = JSON.parse(res);
 
             if (roisData.hasOwnProperty("hwDigitModel") && roisData.hwDigitModel) {
-              this.callCustomModal(Strings.message_text, "Digit model is not availaible", false);
+              ToastAndroid.show('Digit Model is Not Availaible', ToastAndroid.SHORT);
+            } else if (roisData.hasOwnProperty("blockLetterModel") && roisData.blockLetterModel) {
+              ToastAndroid.show('Alpha numeric model is not availaible', ToastAndroid.SHORT);
 
-          } else if (roisData.hasOwnProperty("blockLetterModel") && roisData.blockLetterModel) {
-              this.callCustomModal(Strings.message_text, "Alpha numeric model is not availaible", false);
-
-          } else {
+            } else {
               let cells = roisData.layout.cells;
               this.consolidatePrediction(cells, roisData)
-          }
+            }
 
 
           }).catch((code, message) => {

@@ -45,7 +45,6 @@ public class RemoteConfig {
                             if (task.isSuccessful()) {
                                hasValue[0] = mFirebaseRemoteConfig.getBoolean("isFBDownloadEnable");
                                 Log.d(TAG, "onComplete: hasValue[0]=> " + hasValue[0]);
-                                hasValue[0] = true;
                                 isFBDownloadModel.set(hasValue[0]);
                                 boolean value = task.getResult();
                                 Log.d(TAG, "onComplete: value " + value);

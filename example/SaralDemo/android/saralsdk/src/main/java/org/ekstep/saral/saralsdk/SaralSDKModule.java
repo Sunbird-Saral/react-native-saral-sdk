@@ -17,6 +17,7 @@ import org.ekstep.saral.saralsdk.hwmodel.HWClassifier;
 import org.ekstep.saral.saralsdk.hwmodel.HWClassifierStatusListener;
 import org.ekstep.saral.saralsdk.hwmodel.HWBlockLettersClassifier;	
 import org.ekstep.saral.saralsdk.hwmodel.HWBlockLettersClassifierStatusListener;
+import org.ekstep.saral.saralsdk.hwmodel.RemoteConfig;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.opencv.android.BaseLoaderCallback;
