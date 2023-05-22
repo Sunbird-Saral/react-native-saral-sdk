@@ -46,7 +46,7 @@ export default function App({navigation}) {
 
             } else {
               let cells = roisData.layout.cells;
-              this.consolidatePrediction(cells, roisData)
+              consolidatePrediction(cells, roisData)
             }
 
 
