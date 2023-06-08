@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Button, PermissionsAndroid, Alert } from 'react-native';
+import { StyleSheet, Text, View, Button, PermissionsAndroid, Alert, ToastAndroid } from 'react-native';
 import SaralSDK from '../SaralSDK'
 import SaralSpecData from '../data/saral-physical-layout-representation-specs-example1.json'
 import DropDownMenu from '../DropDownMenu';
@@ -38,8 +38,18 @@ export default function App({navigation}) {
         if (roiIndex != -1) {
           SaralSDK.startCamera(JSON.stringify(jsonRoiData), pageNumber).then(res => {
             let roisData = JSON.parse(res);
-            let cells = roisData.layout.cells;
-            consolidatePrediction(cells, roisData)
+
+            if (roisData.hasOwnProperty("hwDigitModel") && roisData.hwDigitModel) {
+              ToastAndroid.show('Digit Model is Not Availaible', ToastAndroid.SHORT);
+            } else if (roisData.hasOwnProperty("blockLetterModel") && roisData.blockLetterModel) {
+              ToastAndroid.show('Alpha numeric model is not availaible', ToastAndroid.SHORT);
+
+            } else {
+              let cells = roisData.layout.cells;
+              consolidatePrediction(cells, roisData)
+            }
+
+
           }).catch((code, message) => {
             console.log("message", message)
             console.log("message", code)
