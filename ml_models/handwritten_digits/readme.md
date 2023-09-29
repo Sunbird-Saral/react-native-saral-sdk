@@ -39,7 +39,7 @@ $ keras_to_tf_converter.py
 - Use ``predict.ipynb`` file for inferencing. Get the ground truth image and it's prediction (as title of the image)
 
 ## Notebooks and reports
-- Handwritten digits playbook [Playbook](https://github.com/Sunbird-Saral/react-native-saral-sdk/blob/develop/ml_models/handwritten_digits/notebooks/HandwrittenDigits_Playbook-%5BIteration-3%5D.ipynb)
+- Handwritten digits [Playbook](https://github.com/Sunbird-Saral/react-native-saral-sdk/blob/develop/ml_models/handwritten_digits/notebooks/HandwrittenDigits_Playbook-%5BIteration-3%5D.ipynb)
 - Experiment notebooks are inside ``notebooks/``
 - Evaluation metrics like confusion matrix is used to report the performance of model
 - Can check the performance of each trained model by just executing the cells in [experiments.ipynb](https://github.com/Sunbird-Saral/react-native-saral-sdk/tree/enhancement/ml_folder_struct/ml_models/handwritten_alpha-numeric/notebooks/experiment1) file
