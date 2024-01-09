@@ -49,6 +49,7 @@ def load_mnist():
     for i in sorted(glob.glob(config.IMAGE_PATH)):
         img = cv2.imread(i)
         img= cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = cv2.resize(img, (28,28), cv2.INTER_AREA)
         val = int(i.split("/")[-2])
         train.append(img)
         label.append(val)
@@ -95,11 +96,10 @@ def get_train_generator(x_train, y_train, batch_size = 32):
         Instance of ImageDataGenerator
         (See: https://keras.io/preprocessing/image/ )
     '''
-    train_datagen = ImageDataGenerator(rotation_range = 15,
-                                       width_shift_range = 0.1,
-                                       height_shift_range = 0.1,
+    train_datagen = ImageDataGenerator(width_shift_range = 0.2,
+                                       height_shift_range = 0.2,
                                        shear_range = 0.2,
-                                       zoom_range = 0.1)
+                                       zoom_range = 0.2)
 
     return train_datagen.flow(x_train, y_train, batch_size = batch_size)
 

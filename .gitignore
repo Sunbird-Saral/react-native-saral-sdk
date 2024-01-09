@@ -90,3 +90,13 @@ node_modules
 build
 npm-debug.log
 .env
+
+# Ignore images/ models
+*.png
+*.jpg
+*.java
+*.h5
+*.tflite
+example/
+android/
+*.ipynb_checkpoints/
