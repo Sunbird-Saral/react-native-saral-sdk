@@ -3,6 +3,7 @@ import sys
 sys.path.append('../../ml_models/handwritten_digits/src/models')
 sys.path.append('../../ml_models/handwritten_alpha-numeric/src/models')
 from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
+from keras.callbacks import CSVLogger
 import datetime
 import config
 
@@ -11,6 +12,7 @@ class BaseModel(object):
         self.model = model
         self.callbacks = callbacks
         self.optimizer = optimizer
+        self.csv_logger = CSVLogger(config.LOG_FILE_PATH+'training_log.csv', append=True, separator=';')
 
     def load_weights(self, path):
         self.model.load_weights(path)
@@ -25,7 +27,6 @@ class BaseModel(object):
     def fit(self, training_data, validation_data, epochs, batch_size):
         x_train, y_train = training_data
         x_val, y_val = validation_data
-        
         # Tensorboard callback
         log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
         tensorboard_callback = TensorBoard(log_dir=log_dir,histogram_freq=1, write_graph= True, update_freq='epoch')
@@ -39,7 +40,7 @@ class BaseModel(object):
                                                                             period=1,save_freq='epoch')
         hist = self.model.fit(x_train, y_train, epochs = epochs,
                               batch_size = batch_size,
-                              validation_data = (x_val, y_val), callbacks= [self.callbacks, tensorboard_callback, save_model_callback])
+                              validation_data = (x_val, y_val), callbacks= [self.callbacks, tensorboard_callback, save_model_callback, self.csv_logger])
 
         return hist
 
@@ -66,7 +67,7 @@ class BaseModel(object):
                                                                             period=1, save_freq='epoch')
 
         hist = self.model.fit_generator(train_datagen,
-                                        callbacks = [self.callbacks, save_model_callback, tensorboard_callback],
+                                        callbacks = [self.callbacks, save_model_callback, tensorboard_callback, self.csv_logger],
                                         steps_per_epoch = x_train.shape[0] // batch_size,
                                         epochs = epochs, validation_data = val_datagen,
                                         validation_steps = x_val.shape[0] // batch_size)

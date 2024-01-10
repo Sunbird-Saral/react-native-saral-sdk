@@ -2,12 +2,14 @@ import argparse
 import config
 import sys
 import os
+import logging
 sys.path.append(os.path.expanduser('~')+'/react-native-saral-sdk/ml_models/common')
 from utils import load_mnist
 from resnet_model import ResNet164
 
 DEPTH = 164
 MODEL_NAME = f'ResNet{DEPTH}'
+
 
 def get_argument_parser(model_name):
     '''
@@ -68,7 +70,7 @@ def train(model, model_name):
 
     # build and compile the model
     model.compile()
-    print('[model built]')
+    print(f'[model built]')
 
     # save the model architecture to an image file
     #if args.save_model_to_image:
@@ -81,6 +83,7 @@ def train(model, model_name):
     #     print(f'[weights loaded from {args.path_for_weights}]')
     if config.FINE_TUNE:
         model.load_weights(config.PRETRAINED_WEIGHT_PATH)
+        # logging.basicConfig(filename=config.LOG_FILE_PATH + 'hw_chars.log', filemode='a', format=f'[weights loaded from {config.PRETRAINED_WEIGHT_PATH}]')
         print(f'[weights loaded from {config.PRETRAINED_WEIGHT_PATH}]')
 
     # train the model
@@ -116,6 +119,8 @@ def train(model, model_name):
 
     # evaluate the model with the test dataset
     loss_and_metrics = model.evaluate(test_data, batch_size = config.BATCH_SIZE)
+    # logging.basicConfig(filename=config.LOG_FILE_PATH + 'hw_chars.log', filemode='a', format=f'Loss and metrics --> {loss_and_metrics}')
+    # logging.info(f'loss_and_metrics-->{loss_and_metrics}')
     print('[Evaluation on the test dataset]\n', loss_and_metrics, '\n')
 
 def main():

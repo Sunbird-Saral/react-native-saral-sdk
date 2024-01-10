@@ -20,16 +20,20 @@ TF_LITE_SAVE_PATH= "/home/venkateshiyer/react-native-saral-sdk/ml_models/handwri
 EPOCH=60
 
 # batch size of training data
-BATCH_SIZE= 30
+BATCH_SIZE= 2
 
 # Path of pretrained Resnet model to finetune it on new batch of dataset
 PRETRAINED_WEIGHT_PATH='../models/pre-trained_model/trained_resnet_model_v2_10.h5'
 
 # training dataset path
-IMAGE_PATH="../data/raw/*/*"
+# IMAGE_PATH="../data/raw/*/*"
+IMAGE_PATH = "/home/venkatesh/react-native-saral-sdk/ml_models/handwritten_characters/data/raw/*/*"
+
+#Log file path
+LOG_FILE_PATH = "/home/venkatesh/react-native-saral-sdk/ml_models/handwritten_characters/models/saved_model/"
 
 # size of the dataset to use for validation of the trained model
-TEST_DATA_SIZE=300
+TEST_DATA_SIZE=20
 
 #if you want to use pre rained model as an initializer then FINE_TUNE should be True
 FINE_TUNE=False
@@ -38,4 +42,4 @@ FINE_TUNE=False
 DATA_AUGMENTATION=True
 
 # Number of classes (i.e 0-9: digit class and 10: noise class)
-NO_OF_CLASS = 27
+NO_OF_CLASS = 4
